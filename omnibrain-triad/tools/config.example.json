@@ -1,0 +1,45 @@
+{
+  "version": "1.0",
+  "defaults": {
+    "timeout_seconds": 120,
+    "encoding": "utf-8"
+  },
+  "auditors": {
+    "codex": {
+      "enabled": false,
+      "cmd": "codex",
+      "args": [],
+      "input_mode": "stdin",
+      "manual_copy_hint": "Abra o Codex CLI e cole o prompt salvo."
+    },
+    "gemini": {
+      "enabled": false,
+      "cmd": "gemini",
+      "args": [],
+      "input_mode": "stdin",
+      "manual_copy_hint": "Abra o Gemini CLI e cole o prompt salvo."
+    },
+    "deepseek": {
+      "enabled": false,
+      "cmd": "deepseek",
+      "args": [],
+      "input_mode": "stdin",
+      "manual_copy_hint": "PreGate opcional. Cole o prompt manualmente."
+    },
+    "coderabbit": {
+      "enabled": false,
+      "cmd": "coderabbit",
+      "args": [],
+      "input_mode": "stdin",
+      "manual_copy_hint": "PreGate opcional. Cole o prompt manualmente."
+    }
+  },
+  "byterover": {
+    "enabled": false,
+    "cmd": "brv",
+    "args": [],
+    "input_mode": "stdin",
+    "manual_copy_hint": "Se o CLI falhar, arquivo será salvo no INBOX."
+  }
+}
+

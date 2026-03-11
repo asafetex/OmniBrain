@@ -1,0 +1,6 @@
+﻿# Local runtime artifacts
+omnibrain-triad/tmp/
+omnibrain-triad/tools/config.json
+
+# ByteRover local context
+.brv/
