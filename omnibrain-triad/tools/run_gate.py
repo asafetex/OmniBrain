@@ -9,6 +9,7 @@ import re
 import shutil
 import subprocess
 import sys
+import unicodedata
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
@@ -17,16 +18,20 @@ from pathlib import Path
 VERDICT_RE = re.compile(r"^\s*VERDICT\s*:\s*(APPROVE|REJECT)\s*$", re.IGNORECASE | re.MULTILINE)
 BLOCKER_SIGNAL_RE = re.compile(r"\[(P0|P1|P2)\]", re.IGNORECASE)
 APPROVE_SIGNAL_RE = re.compile(
-    r"(no blocking|no blocking defects|no blocking issues|no blocking defects introduced|no blocking defects are evident|"
+    r"(no blocking|no blocking defects|no blocking issues|"
     r"no functional regressions? (are )?evident|no regressions? (are )?evident|"
     r"did not find regressions? or blocking issues|did not find .*blocking issues|"
-    r"nao ha regress(a|ã)o evidente|não há regress(a|ã)o evidente|"
-    r"sem regress(a|ã)o evidente|nao ha regress(a|ã)o|sem bloqueios?|"
-    r"nao ha evidencia de regress(a|ã)o funcional|não há evidência de regress(a|ã)o funcional|"
-    r"nao ha evidencia de regress(a|ã)o|não há evidência de regress(a|ã)o)",
+    r"did not find .*defect(s)? introduced|did not find a discrete, actionable defect|"
+    r"nao ha regressao evidente|sem regressao evidente|sem bloqueios?|"
+    r"nao ha evidencia de regressao( funcional)?|nao ha evidencia de bug( introduzido)?|"
+    r"nao ha inconsistenc(i|ia)s? acionave(i|is)|atende ao criterio de aceitacao)",
     re.IGNORECASE,
 )
-
+REJECT_SIGNAL_RE = re.compile(
+    r"(should not be considered correct yet|this is a functional regression|"
+    r"insufficient evidence|insufficiently auditable|falta evidencia|evidencia insuficiente)",
+    re.IGNORECASE,
+)
 
 @dataclass
 class AuditorResult:
@@ -70,15 +75,20 @@ def parse_verdict(text: str) -> str:
     return matches[-1].upper()
 
 
+def normalize_for_inference(text: str) -> str:
+    normalized = unicodedata.normalize("NFKD", text or "")
+    normalized = normalized.encode("ascii", "ignore").decode("ascii")
+    normalized = re.sub(r"\s+", " ", normalized)
+    return normalized.strip().lower()
+
+
 def infer_verdict_from_cli_text(text: str) -> str:
-    normalized = (text or "").lower()
+    normalized = normalize_for_inference(text)
     if BLOCKER_SIGNAL_RE.search(text or ""):
         return "REJECT"
-    if "should not be considered correct yet" in normalized:
+    if REJECT_SIGNAL_RE.search(normalized):
         return "REJECT"
-    if "this is a functional regression" in normalized:
-        return "REJECT"
-    if APPROVE_SIGNAL_RE.search(text or ""):
+    if APPROVE_SIGNAL_RE.search(normalized):
         return "APPROVE"
     return "UNKNOWN"
 
