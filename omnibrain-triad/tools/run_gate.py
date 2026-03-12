@@ -42,12 +42,14 @@ def load_config(tools_dir: Path) -> dict:
     return load_json(tools_dir / "config.example.json")
 
 
-def parse_change_metadata(change_package: str) -> tuple[str, str]:
+def parse_change_metadata(change_package: str) -> tuple[str, str, str]:
     change_id_match = re.search(r"^- Change-ID:\s*(.+)$", change_package, re.MULTILINE)
     level_match = re.search(r"^- Level:\s*(L1|L2|L3)$", change_package, re.MULTILINE)
+    repo_match = re.search(r"^- Repo:\s*(.+)$", change_package, re.MULTILINE)
     change_id = change_id_match.group(1).strip() if change_id_match else f"CHG-UNKNOWN-{datetime.now():%Y%m%d-%H%M%S}"
     level = level_match.group(1).strip() if level_match else "L3"
-    return change_id, level
+    repo = repo_match.group(1).strip() if repo_match else ""
+    return change_id, level, repo
 
 
 def parse_verdict(text: str) -> str:
@@ -62,7 +64,7 @@ def build_prompt(template_path: Path, change_package: str) -> str:
     return template.replace("{{CHANGE_PACKAGE}}", change_package)
 
 
-def run_cli(cmd: str, args: list[str], prompt: str, timeout_seconds: int) -> tuple[int, str, str]:
+def run_cli(cmd: str, args: list[str], prompt: str, timeout_seconds: int, cwd: Path | None) -> tuple[int, str, str]:
     proc = subprocess.run(
         [cmd] + args,
         input=prompt,
@@ -71,6 +73,7 @@ def run_cli(cmd: str, args: list[str], prompt: str, timeout_seconds: int) -> tup
         errors="replace",
         capture_output=True,
         timeout=timeout_seconds,
+        cwd=str(cwd) if cwd else None,
     )
     return proc.returncode, proc.stdout, proc.stderr
 
@@ -82,6 +85,7 @@ def run_auditor(
     tmp_manual_dir: Path,
     manual_responses_dir: Path,
     config: dict,
+    execution_cwd: Path | None,
 ) -> AuditorResult:
     auditor_cfg = config.get("auditors", {}).get(auditor_name, {})
     defaults = config.get("defaults", {})
@@ -135,7 +139,7 @@ def run_auditor(
         )
 
     try:
-        rc, out, err = run_cli(cmd, args, prompt, timeout_seconds)
+        rc, out, err = run_cli(cmd, args, prompt, timeout_seconds, execution_cwd)
     except Exception as exc:  # pragma: no cover - fallback path
         final_verdict = manual_verdict if manual_verdict != "UNKNOWN" else "UNKNOWN"
         return AuditorResult(
@@ -262,7 +266,15 @@ def main() -> int:
     repo_root = tools_dir.parent
     config = load_config(tools_dir)
     change_package = change_path.read_text(encoding="utf-8")
-    change_id, level = parse_change_metadata(change_package)
+    change_id, level, repo_in_package = parse_change_metadata(change_package)
+
+    execution_cwd: Path | None = None
+    if repo_in_package:
+        candidate = Path(repo_in_package)
+        if not candidate.is_absolute():
+            candidate = (change_path.parent / candidate).resolve()
+        if candidate.exists() and candidate.is_dir():
+            execution_cwd = candidate
 
     manual_dir = repo_root / "tmp" / "manual-prompts" / change_id
     manual_dir.mkdir(parents=True, exist_ok=True)
@@ -278,14 +290,30 @@ def main() -> int:
     for name in ("deepseek", "coderabbit"):
         cfg = config.get("auditors", {}).get(name, {})
         if bool(cfg.get("enabled", False)):
-            results[name] = run_auditor(name, change_package, tools_dir, manual_dir, manual_responses_dir, config)
+            results[name] = run_auditor(
+                name,
+                change_package,
+                tools_dir,
+                manual_dir,
+                manual_responses_dir,
+                config,
+                execution_cwd,
+            )
 
     required_gate = ["codex", "gemini"] if level == "L3" else []
     optional_gate = ["codex", "gemini"] if level == "L2" else []
     gate_targets = required_gate if required_gate else optional_gate
 
     for name in gate_targets:
-        results[name] = run_auditor(name, change_package, tools_dir, manual_dir, manual_responses_dir, config)
+        results[name] = run_auditor(
+            name,
+            change_package,
+            tools_dir,
+            manual_dir,
+            manual_responses_dir,
+            config,
+            execution_cwd,
+        )
 
     decision = decide(level, results)
     ordered = [results[k] for k in ("deepseek", "coderabbit", "codex", "gemini") if k in results]
