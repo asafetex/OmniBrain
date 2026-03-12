@@ -87,10 +87,12 @@ Copy-Item tools/config.example.json tools/config.json
    - `cmd`
    - `args` fixos
    - `enabled`
+   - `timeout_seconds` por auditor (opcional)
 4. Nao invente flags: o script executa exatamente o que estiver no config.
 
 Config inicial recomendado para amanha:
 - `codex.enabled = true` com `args = ["review", "-"]`
+- `codex.timeout_seconds = 240` para reduzir timeout em reviews maiores
 - `gemini.enabled = false` (fallback manual no ciclo 1)
 - `deepseek.enabled = false`
 - `coderabbit.enabled = false`
@@ -119,3 +121,17 @@ python tools/promote_to_obsidian.py --list
 ```
 
 Se a CLI nao estiver disponivel, os scripts geram fallback manual e salvam artefatos locais.
+
+## Testes automatizados no sandbox (recomendado)
+
+Se `pytest` nao estiver instalado no Python global:
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\python.exe -m pip install --upgrade pip
+.\.venv\Scripts\python.exe -m pip install pytest
+.\.venv\Scripts\python.exe -m pytest -q
+```
+
+Resultado esperado no sandbox de exemplo:
+- `10 passed`

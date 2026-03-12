@@ -9,6 +9,7 @@
       "enabled": false,
       "cmd": "codex",
       "args": [],
+      "timeout_seconds": 240,
       "input_mode": "stdin",
       "manual_copy_hint": "Abra o Codex CLI e cole o prompt salvo."
     },
@@ -16,6 +17,7 @@
       "enabled": false,
       "cmd": "gemini",
       "args": [],
+      "timeout_seconds": 120,
       "input_mode": "stdin",
       "manual_copy_hint": "Abra o Gemini CLI e cole o prompt salvo."
     },
@@ -23,6 +25,7 @@
       "enabled": false,
       "cmd": "deepseek",
       "args": [],
+      "timeout_seconds": 120,
       "input_mode": "stdin",
       "manual_copy_hint": "PreGate opcional. Cole o prompt manualmente."
     },
@@ -30,6 +33,7 @@
       "enabled": false,
       "cmd": "coderabbit",
       "args": [],
+      "timeout_seconds": 120,
       "input_mode": "stdin",
       "manual_copy_hint": "PreGate opcional. Cole o prompt manualmente."
     }
@@ -42,4 +46,3 @@
     "manual_copy_hint": "Se o CLI falhar, arquivo será salvo no INBOX."
   }
 }
-
