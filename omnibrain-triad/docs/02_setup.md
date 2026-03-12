@@ -121,3 +121,17 @@ python tools/promote_to_obsidian.py --list
 ```
 
 Se a CLI nao estiver disponivel, os scripts geram fallback manual e salvam artefatos locais.
+
+## Testes automatizados no sandbox (recomendado)
+
+Se `pytest` nao estiver instalado no Python global:
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\python.exe -m pip install --upgrade pip
+.\.venv\Scripts\python.exe -m pip install pytest
+.\.venv\Scripts\python.exe -m pytest -q
+```
+
+Resultado esperado no sandbox de exemplo:
+- `10 passed`

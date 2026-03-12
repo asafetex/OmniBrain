@@ -57,6 +57,8 @@ Transformar qualquer tarefa em um fluxo diff-first com consenso multiagente, reg
 9. Promova para o Graph quando reutilizavel:
    - `python tools/promote_to_obsidian.py --list`
    - `python tools/promote_to_obsidian.py --source context-hub/05_INBOX/byterover-imports/<arquivo>.md --target disciplines/data-engineering/skills/spark-sql/`
+10. (Opcional) validar testes no sandbox:
+   - `.\.venv\Scripts\python.exe -m pytest -q`
 
 ## Estrutura
 
