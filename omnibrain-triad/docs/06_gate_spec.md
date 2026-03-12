@@ -49,6 +49,7 @@ Decidir de forma objetiva se uma mudança pode seguir para commit/merge.
 3. Cole o prompt do auditor no CLI correspondente (ex.: Gemini).
 4. Salve a resposta completa em:
    - `tmp/manual-responses/<Change-ID>/gemini.md`
+   - a resposta manual deve ser mais nova que o prompt da execução atual (o script ignora resposta antiga).
 5. Rode o Gate novamente para consolidar decisão:
    - `python tools/run_gate.py --change-package tmp/change-packages/<Change-ID>.md`
 

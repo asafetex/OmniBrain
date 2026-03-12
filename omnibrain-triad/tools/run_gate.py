@@ -120,9 +120,15 @@ def run_auditor(
     manual_response_path = manual_responses_dir / f"{auditor_name}.md"
     manual_response = ""
     manual_verdict = "UNKNOWN"
+    manual_stale = False
     if manual_response_path.exists():
-        manual_response = manual_response_path.read_text(encoding="utf-8")
-        manual_verdict = parse_verdict(manual_response)
+        prompt_mtime = prompt_path.stat().st_mtime
+        response_mtime = manual_response_path.stat().st_mtime
+        if response_mtime >= prompt_mtime:
+            manual_response = manual_response_path.read_text(encoding="utf-8")
+            manual_verdict = parse_verdict(manual_response)
+        else:
+            manual_stale = True
 
     enabled = bool(auditor_cfg.get("enabled", False))
     cmd = str(auditor_cfg.get("cmd", "")).strip()
@@ -132,6 +138,7 @@ def run_auditor(
 
     if not enabled:
         final_verdict = manual_verdict if manual_verdict != "UNKNOWN" else "UNKNOWN"
+        stale_note = " Resposta manual existente esta desatualizada para este prompt." if manual_stale else ""
         return AuditorResult(
             name=auditor_name,
             ran=False,
@@ -140,13 +147,14 @@ def run_auditor(
             verdict_source="manual" if manual_verdict != "UNKNOWN" else "none",
             command=f"{cmd} {' '.join(args)}".strip(),
             stdout="",
-            stderr="Auditor desabilitado em config. Use fallback manual com prompt salvo.",
+            stderr=f"Auditor desabilitado em config. Use fallback manual com prompt salvo.{stale_note}",
             manual_prompt_path=str(prompt_path),
             manual_response_path=str(manual_response_path),
         )
 
     if not cmd or shutil.which(cmd) is None:
         final_verdict = manual_verdict if manual_verdict != "UNKNOWN" else "UNKNOWN"
+        stale_note = " Resposta manual existente esta desatualizada para este prompt." if manual_stale else ""
         return AuditorResult(
             name=auditor_name,
             ran=False,
@@ -155,7 +163,7 @@ def run_auditor(
             verdict_source="manual" if manual_verdict != "UNKNOWN" else "none",
             command=f"{cmd} {' '.join(args)}".strip(),
             stdout="",
-            stderr="Comando da CLI nao encontrado no PATH.",
+            stderr=f"Comando da CLI nao encontrado no PATH.{stale_note}",
             manual_prompt_path=str(prompt_path),
             manual_response_path=str(manual_response_path),
         )
@@ -164,6 +172,7 @@ def run_auditor(
         rc, out, err = run_cli(cmd, args, prompt, timeout_seconds, execution_cwd)
     except Exception as exc:  # pragma: no cover - fallback path
         final_verdict = manual_verdict if manual_verdict != "UNKNOWN" else "UNKNOWN"
+        stale_note = " Resposta manual existente esta desatualizada para este prompt." if manual_stale else ""
         return AuditorResult(
             name=auditor_name,
             ran=False,
@@ -172,7 +181,7 @@ def run_auditor(
             verdict_source="manual" if manual_verdict != "UNKNOWN" else "none",
             command=f"{cmd} {' '.join(args)}".strip(),
             stdout="",
-            stderr=f"Falha ao executar CLI: {exc}",
+            stderr=f"Falha ao executar CLI: {exc}.{stale_note}",
             manual_prompt_path=str(prompt_path),
             manual_response_path=str(manual_response_path),
         )

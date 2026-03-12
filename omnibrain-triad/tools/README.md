@@ -44,6 +44,9 @@ Quando uma CLI de auditor nao estiver disponivel:
 4. Salve a resposta em `tmp/manual-responses/<Change-ID>/<auditor>.md`.
 5. Rode novamente o Gate para consolidar decisao.
 
+Observacao importante:
+- respostas manuais antigas (timestamp anterior ao prompt gerado na rodada atual) sao ignoradas.
+
 Tambem e possivel customizar o diretorio de respostas:
 
 - `python tools/run_gate.py --change-package ... --manual-responses-dir <dir>`
