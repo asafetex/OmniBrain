@@ -87,10 +87,12 @@ Copy-Item tools/config.example.json tools/config.json
    - `cmd`
    - `args` fixos
    - `enabled`
+   - `timeout_seconds` por auditor (opcional)
 4. Nao invente flags: o script executa exatamente o que estiver no config.
 
 Config inicial recomendado para amanha:
 - `codex.enabled = true` com `args = ["review", "-"]`
+- `codex.timeout_seconds = 240` para reduzir timeout em reviews maiores
 - `gemini.enabled = false` (fallback manual no ciclo 1)
 - `deepseek.enabled = false`
 - `coderabbit.enabled = false`

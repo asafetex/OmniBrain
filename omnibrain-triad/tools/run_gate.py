@@ -15,6 +15,7 @@ from pathlib import Path
 
 
 VERDICT_RE = re.compile(r"^\s*VERDICT\s*:\s*(APPROVE|REJECT)\s*$", re.IGNORECASE | re.MULTILINE)
+BLOCKER_SIGNAL_RE = re.compile(r"\[(P0|P1|P2)\]", re.IGNORECASE)
 
 
 @dataclass
@@ -59,6 +60,17 @@ def parse_verdict(text: str) -> str:
     return matches[-1].upper()
 
 
+def infer_verdict_from_cli_text(text: str) -> str:
+    normalized = (text or "").lower()
+    if BLOCKER_SIGNAL_RE.search(text or ""):
+        return "REJECT"
+    if "should not be considered correct yet" in normalized:
+        return "REJECT"
+    if "this is a functional regression" in normalized:
+        return "REJECT"
+    return "UNKNOWN"
+
+
 def build_prompt(template_path: Path, change_package: str) -> str:
     template = template_path.read_text(encoding="utf-8")
     return template.replace("{{CHANGE_PACKAGE}}", change_package)
@@ -89,7 +101,7 @@ def run_auditor(
 ) -> AuditorResult:
     auditor_cfg = config.get("auditors", {}).get(auditor_name, {})
     defaults = config.get("defaults", {})
-    timeout_seconds = int(defaults.get("timeout_seconds", 120))
+    timeout_seconds = int(auditor_cfg.get("timeout_seconds", defaults.get("timeout_seconds", 120)))
     template_file = tools_dir / "templates" / f"{auditor_name}_review_prompt.md"
     prompt = build_prompt(template_file, change_package)
 
@@ -155,13 +167,20 @@ def run_auditor(
             manual_response_path=str(manual_response_path),
         )
 
-    cli_verdict = parse_verdict(out + "\n" + err)
+    combined_text = out + "\n" + err
+    cli_verdict = parse_verdict(combined_text)
+    inferred_cli_verdict = infer_verdict_from_cli_text(combined_text) if cli_verdict == "UNKNOWN" else "UNKNOWN"
     verdict = cli_verdict
     verdict_source = "cli"
     status = "completed" if rc == 0 else f"cli_exit_{rc}"
 
-    # Precedencia: verdict da CLI > verdict manual > UNKNOWN.
-    if cli_verdict == "UNKNOWN" and manual_verdict != "UNKNOWN":
+    # Precedencia: verdict explicito da CLI > verdict inferido da CLI > verdict manual > UNKNOWN.
+    if cli_verdict == "UNKNOWN" and inferred_cli_verdict != "UNKNOWN":
+        verdict = inferred_cli_verdict
+        verdict_source = "cli_inferred"
+        status = f"{status}_inferred"
+
+    if verdict == "UNKNOWN" and manual_verdict != "UNKNOWN":
         verdict = manual_verdict
         verdict_source = "manual"
         status = f"{status}_manual_fallback"

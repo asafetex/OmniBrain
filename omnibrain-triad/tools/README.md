@@ -17,6 +17,7 @@ Scripts locais para orquestracao sem API.
    - `tools/config.example.json` -> `tools/config.json`
 2. Preencha comandos reais após consultar `--help` de cada CLI.
 3. Os scripts nunca inventam flags.
+4. Opcional: ajuste `timeout_seconds` por auditor quando uma CLI demora mais para responder (ex.: Codex).
 
 Modo recomendado agora:
 - `byterover.enabled = false` (Obsidian-only);
