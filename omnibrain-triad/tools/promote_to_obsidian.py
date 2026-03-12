@@ -20,9 +20,42 @@ def update_graph_index(graph_index: Path, new_rel_path: str) -> None:
         graph_index.write_text("# Skill Graph Index\n\n## Promoted Notes\n", encoding="utf-8")
     content = graph_index.read_text(encoding="utf-8")
     marker = f"- [{Path(new_rel_path).stem}]({new_rel_path.replace('\\', '/')})"
-    if marker not in content:
-        content = content.rstrip() + f"\n\n## Promoted Notes\n{marker}\n"
-        graph_index.write_text(content, encoding="utf-8")
+    promoted_heading = "## Promoted Notes"
+
+    lines = content.splitlines()
+    promoted_notes: list[str] = []
+    cleaned_lines: list[str] = []
+    idx = 0
+    while idx < len(lines):
+        line = lines[idx]
+        if line.strip() == promoted_heading:
+            idx += 1
+            while idx < len(lines) and not lines[idx].startswith("## "):
+                item = lines[idx].strip()
+                if item.startswith("- [") and item not in promoted_notes:
+                    promoted_notes.append(item)
+                idx += 1
+            continue
+        cleaned_lines.append(line)
+        idx += 1
+
+    if marker not in promoted_notes:
+        promoted_notes.append(marker)
+
+    # Trim trailing blank lines before re-appending canonical promoted section.
+    while cleaned_lines and not cleaned_lines[-1].strip():
+        cleaned_lines.pop()
+
+    rebuilt = "\n".join(cleaned_lines)
+    if rebuilt:
+        rebuilt += "\n\n"
+    else:
+        rebuilt = ""
+    rebuilt += promoted_heading + "\n"
+    for item in promoted_notes:
+        rebuilt += item + "\n"
+
+    graph_index.write_text(rebuilt, encoding="utf-8")
 
 
 def main() -> int:

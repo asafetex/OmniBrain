@@ -16,3 +16,5 @@
 
 ## Promoted Notes
 - [MEM__WIN__sandbox-l3-e2e__gate-manual-fallback__20260310-2048](disciplines/agents/skills/MEM__WIN__sandbox-l3-e2e__gate-manual-fallback__20260310-2048.md)
+- [MEM__WIN__sandbox-l3-e2e__checkout-numeric-validation-safe-path__20260312-0055](disciplines/agents/skills/MEM__WIN__sandbox-l3-e2e__checkout-numeric-validation-safe-path__20260312-0055.md)
+- [MEM__WIN__sandbox-l3-e2e__checkout-currency-hardening-safe-validation__20260312-0108](disciplines/agents/skills/MEM__WIN__sandbox-l3-e2e__checkout-currency-hardening-safe-validation__20260312-0108.md)
