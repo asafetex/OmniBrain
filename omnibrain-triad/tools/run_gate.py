@@ -16,6 +16,14 @@ from pathlib import Path
 
 VERDICT_RE = re.compile(r"^\s*VERDICT\s*:\s*(APPROVE|REJECT)\s*$", re.IGNORECASE | re.MULTILINE)
 BLOCKER_SIGNAL_RE = re.compile(r"\[(P0|P1|P2)\]", re.IGNORECASE)
+APPROVE_SIGNAL_RE = re.compile(
+    r"(no blocking|no blocking defects|no blocking issues|no blocking defects introduced|no blocking defects are evident|"
+    r"no functional regressions? (are )?evident|no regressions? (are )?evident|"
+    r"did not find regressions? or blocking issues|did not find .*blocking issues|"
+    r"nao ha regress(a|ã)o evidente|não há regress(a|ã)o evidente|"
+    r"sem regress(a|ã)o evidente|nao ha regress(a|ã)o|sem bloqueios?)",
+    re.IGNORECASE,
+)
 
 
 @dataclass
@@ -68,6 +76,8 @@ def infer_verdict_from_cli_text(text: str) -> str:
         return "REJECT"
     if "this is a functional regression" in normalized:
         return "REJECT"
+    if APPROVE_SIGNAL_RE.search(text or ""):
+        return "APPROVE"
     return "UNKNOWN"
 
 
