@@ -21,7 +21,9 @@ APPROVE_SIGNAL_RE = re.compile(
     r"no functional regressions? (are )?evident|no regressions? (are )?evident|"
     r"did not find regressions? or blocking issues|did not find .*blocking issues|"
     r"nao ha regress(a|ã)o evidente|não há regress(a|ã)o evidente|"
-    r"sem regress(a|ã)o evidente|nao ha regress(a|ã)o|sem bloqueios?)",
+    r"sem regress(a|ã)o evidente|nao ha regress(a|ã)o|sem bloqueios?|"
+    r"nao ha evidencia de regress(a|ã)o funcional|não há evidência de regress(a|ã)o funcional|"
+    r"nao ha evidencia de regress(a|ã)o|não há evidência de regress(a|ã)o)",
     re.IGNORECASE,
 )
 
@@ -116,7 +118,12 @@ def run_auditor(
     prompt = build_prompt(template_file, change_package)
 
     prompt_path = tmp_manual_dir / f"{auditor_name}_prompt.md"
-    prompt_path.write_text(prompt, encoding="utf-8")
+    if prompt_path.exists():
+        existing_prompt = prompt_path.read_text(encoding="utf-8")
+        if existing_prompt != prompt:
+            prompt_path.write_text(prompt, encoding="utf-8")
+    else:
+        prompt_path.write_text(prompt, encoding="utf-8")
     manual_response_path = manual_responses_dir / f"{auditor_name}.md"
     manual_response = ""
     manual_verdict = "UNKNOWN"
