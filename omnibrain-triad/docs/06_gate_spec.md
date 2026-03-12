@@ -34,7 +34,9 @@ Decidir de forma objetiva se uma mudança pode seguir para commit/merge.
 - Se faltou verdict ou houve ambiguidade => `CONFLICT` e decisão humana.
 - Precedência de verdict por auditor:
   - `VERDICT` vindo da CLI (stdout/stderr),
-  - se não houver `VERDICT`, `REJECT` inferido quando a saída da CLI trouxer sinal claro de blocker (ex.: `[P1]`, regressão funcional),
+  - se não houver `VERDICT`, inferência da CLI:
+    - `REJECT` quando houver sinal claro de blocker (ex.: `[P1]`, regressão funcional explícita),
+    - `APPROVE` quando houver sinal explícito de ausência de blockers (ex.: "no blocking defects"),
   - senão `VERDICT` vindo de resposta manual em `tmp/manual-responses/<Change-ID>/<auditor>.md`,
   - senão `UNKNOWN`.
 
