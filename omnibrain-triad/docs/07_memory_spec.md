@@ -1,6 +1,6 @@
 # 07 Memory Spec
 
-## Tipos de memória
+## Tipos de memoria
 
 - `PLAN`
 - `REVIEW`
@@ -8,7 +8,7 @@
 - `WIN`
 - `DECISION`
 
-## Padrão de ID
+## Padrao de ID
 
 `MEM::<TYPE>::<PROJECT>::<TOPIC>::<YYYYMMDD-HHMM>`
 
@@ -26,22 +26,27 @@ Exemplo:
 
 ## Registro
 
-Prioridade:
-1. ByteRover CLI 2.0 (quando disponível e configurado).
-2. Fallback local em `context-hub/05_INBOX/byterover-imports/`.
+Modo padrao atual:
+1. Obsidian-only com fallback local em `context-hub/05_INBOX/byterover-imports/`.
+2. Versionamento e compartilhamento via Git do vault.
 
-O script `tools/record_to_byterover.py` tenta CLI e faz fallback automático.
+Modo opcional:
+1. ByteRover CLI 2.x (quando habilitado e validado no config).
 
-Observação para Windows:
+O script `tools/record_to_byterover.py` tenta CLI e faz fallback automatico.
+
+Observacao para Windows:
 - o ID interno permanece `MEM::<TYPE>::...`,
-- o nome do arquivo fallback usa `__` no lugar de `::` por restrição do filesystem.
+- o nome do arquivo fallback usa `__` no lugar de `::` por restricao do filesystem.
 
-## Recuperação (sem inventar flags)
+## Recuperacao
 
-Use `brv --help` para descobrir o comando de busca da sua versão e configure em `tools/config.json`.
+No modo Obsidian-only:
+1. busque no vault por `MEM::`, `#type/...`, `#project/...`;
+2. referencie IDs em `Memory Refs` do Change Package;
+3. apos Gate, registre `REVIEW` + `WIN`/`LESSON`.
 
-Fluxo recomendado:
-
-1. consultar memórias por tags e tópico antes de iniciar L2/L3;
-2. anexar IDs relevantes em `Memory Refs` do Change Package;
-3. após Gate, registrar `REVIEW` + `WIN`/`LESSON`.
+No modo ByteRover:
+1. use `brv --help` para descobrir o comando de busca da sua versao;
+2. configure os comandos reais no `tools/config.json`;
+3. siga o mesmo contrato de IDs e tags.

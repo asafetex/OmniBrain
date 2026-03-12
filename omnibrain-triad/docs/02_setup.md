@@ -1,6 +1,6 @@
 # 02 Setup
 
-## Pré-requisitos
+## Pre-requisitos
 
 - Sistema: Windows, Linux ou macOS
 - `git` no PATH
@@ -9,11 +9,11 @@
 - Claude Code no VS Code
 - Codex CLI logado
 - Gemini CLI logado
-- ByteRover CLI 2.0 logado
+- ByteRover CLI 2.x opcional
 
-## Verificação de CLIs (sem assumir comandos de execução)
+## Verificacao de CLIs (sem assumir comandos de execucao)
 
-Valide existência e sintaxe com `--help`:
+Valide existencia e sintaxe com `--help`:
 
 ```bash
 git --help
@@ -23,10 +23,10 @@ gemini --help
 brv --help
 ```
 
-Se algum comando não existir, mantenha o fluxo em fallback manual (copiar/colar prompts).
+Se algum comando nao existir, mantenha o fluxo em fallback manual (copy/paste prompts).
 
-Observação prática no Windows:
-- se `brv` não estiver no PATH, rode pela entrada Node do pacote:
+Observacao no Windows:
+- se `brv` nao estiver no PATH, rode pela entrada Node do pacote:
 ```powershell
 node C:\Users\PC\AppData\Roaming\npm\node_modules\byterover-cli\bin\run.js --help
 ```
@@ -38,27 +38,23 @@ node C:\Users\PC\AppData\Roaming\npm\node_modules\byterover-cli\bin\run.js --hel
 3. Escolha `omnibrain-triad/context-hub/`.
 4. Fixe `00_HOME.md` e `02_GRAPH/index.md`.
 
-## Obsidian Cloud para documentação
+## Memoria compartilhada com Obsidian (free)
 
-Você pode usar dois modos de nuvem:
+Modo recomendado agora:
+- manter `byterover.enabled = false` em `tools/config.json`;
+- registrar memoria no INBOX (`context-hub/05_INBOX/byterover-imports/`);
+- sincronizar o vault por GitHub (privado) para compartilhamento entre maquinas.
 
-1. Obsidian Sync (privado, sincroniza o vault entre dispositivos):
-   - Abra `Settings -> Sync`.
-   - Faça login na sua conta Obsidian.
-   - Crie ou conecte um remote vault.
-   - Vincule o vault local `omnibrain-triad/context-hub/`.
-2. Obsidian Publish (público, publica documentação em site):
-   - Abra `Publish`.
-   - Escolha as notas/pastas para publicar.
-   - Gere o site de docs.
+Fluxo Git para vault:
+1. `git add context-hub/`
+2. `git commit -m "docs(memory): update inbox and graph"`
+3. `git push`
 
-Recomendação operacional:
-- Use `Sync` para trabalho privado e colaboração fechada.
-- Use `Publish` apenas para documentação que pode ser pública.
+Obsidian Sync continua opcional (pago). Obsidian Publish tambem e opcional.
 
-## Conectar Hub ao repositório de trabalho
+## Conectar Hub ao repositorio de trabalho
 
-Opção A (pasta ao lado do projeto alvo):
+Opcao A (pasta ao lado do projeto alvo):
 
 ```text
 workspace/
@@ -66,15 +62,15 @@ workspace/
   omnibrain-triad/
 ```
 
-Opção B (submodule no projeto alvo):
+Opcao B (submodule no projeto alvo):
 
 ```bash
 git submodule add <url-ou-path-local> omnibrain-triad
 ```
 
-## Configuração dos comandos reais
+## Configuracao dos comandos reais
 
-1. O repositório já inclui `tools/config.json` inicial para ciclo 1.
+1. O repositorio ja inclui `tools/config.json` para ciclo 1.
 2. Se quiser reiniciar do zero, copie o arquivo de exemplo:
 
 ```bash
@@ -91,24 +87,23 @@ Copy-Item tools/config.example.json tools/config.json
    - `cmd`
    - `args` fixos
    - `enabled`
-4. Não invente flags: o script executa exatamente o que estiver no config.
+4. Nao invente flags: o script executa exatamente o que estiver no config.
 
-Config inicial sugerido (já aplicado em `tools/config.json`):
+Config inicial recomendado para amanha:
 - `codex.enabled = true` com `args = ["review", "-"]`
 - `gemini.enabled = false` (fallback manual no ciclo 1)
 - `deepseek.enabled = false`
 - `coderabbit.enabled = false`
-- `byterover.enabled = true` com `cmd = "node"` + `args = ["...byterover-cli\\bin\\run.js","curate","--format","json"]` no Windows
+- `byterover.enabled = false` (modo Obsidian-only)
 
-### Ativação local do provider ByteRover (sem chave)
+## ByteRover opcional (quando ativar)
 
-Para uso local de memória no CLI 2.x:
+Quando quiser ativar ByteRover:
+1. valide CLI e login;
+2. configure `byterover.enabled = true` + `cmd/args` reais no `tools/config.json`;
+3. rode um teste com `record_to_byterover.py`.
 
-```powershell
-node C:\Users\PC\AppData\Roaming\npm\node_modules\byterover-cli\bin\run.js providers connect byterover --format json
-```
-
-Depois valide:
+Exemplo de validacao local (ajuste conforme seu `--help`):
 
 ```powershell
 node C:\Users\PC\AppData\Roaming\npm\node_modules\byterover-cli\bin\run.js status --format json
@@ -123,4 +118,4 @@ python tools/record_to_byterover.py --type PLAN --project omnibrain --topic setu
 python tools/promote_to_obsidian.py --list
 ```
 
-Se a CLI não estiver disponível, os scripts geram fallback manual e salvam artefatos locais.
+Se a CLI nao estiver disponivel, os scripts geram fallback manual e salvam artefatos locais.

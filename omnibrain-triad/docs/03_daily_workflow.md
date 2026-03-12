@@ -6,20 +6,21 @@
    - Use `docs/04_l1_l2_l3.md`.
 2. Rotear contexto:
    - Use `project-template/CLAUDE.md`.
-   - Abra 2 a 5 nós do Skill Graph.
+   - Abra 2 a 5 nos do Skill Graph.
 3. Executar `diff-first` em branch:
    - Planejar, implementar, revisar apenas por `git diff`.
-4. Rodar PreGate opcional e Gate obrigatório quando aplicável:
-   - L3: Codex + Gemini obrigatório.
-5. Capturar memória e promover conhecimento:
-   - Registrar `WIN`/`LESSON` no ByteRover.
-   - Promover só conteúdo reutilizável para o Graph.
+4. Rodar PreGate opcional e Gate obrigatorio quando aplicavel:
+   - L3: Codex + Gemini obrigatorio.
+5. Capturar memoria e promover conhecimento:
+   - Modo padrao: INBOX do Obsidian (`05_INBOX/byterover-imports`).
+   - Opcional: ByteRover CLI ativo.
+   - Promover so conteudo reutilizavel para o Graph.
 
-## Exemplo prático: Spark SQL join explode + performance
+## Exemplo pratico: Spark SQL join explode + performance
 
 Contexto:
-- Pipeline incrementou custo e dobrou linhas após join.
-- Tarefa classificada como `L3` (impacto em dado de produção).
+- Pipeline incrementou custo e dobrou linhas apos join.
+- Tarefa classificada como `L3` (impacto em dado de producao).
 
 Passo a passo:
 
@@ -27,7 +28,7 @@ Passo a passo:
    - `disciplines/data-engineering/skills/spark-sql/joins.md`
    - `disciplines/data-engineering/skills/spark-sql/performance.md`
    - `disciplines/data-engineering/skills/data-quality/duplicates.md`
-2. Implementação em branch:
+2. Implementacao em branch:
    - dedupe de chave no lado direito;
    - validação de contagem antes/depois;
    - ajuste de partição e broadcast seletivo.
@@ -52,8 +53,8 @@ python tools/run_gate.py --change-package tmp/change-packages/<Change-ID>.md
    - executar no Gemini CLI manualmente;
    - salvar resposta em `tmp/manual-responses/<Change-ID>/gemini.md`;
    - rodar `run_gate.py` novamente para consolidar `VERDICT`.
-6. Resolver bloqueios, retestar e repetir até `APPROVE`.
-7. Registrar memória:
+6. Resolver bloqueios, retestar e repetir ate `APPROVE`.
+7. Registrar memoria:
 
 ```bash
 python tools/record_to_byterover.py \
@@ -64,5 +65,6 @@ python tools/record_to_byterover.py \
   --tags "#discipline/data-engineering,#type/win,#project/omnibrain"
 ```
 
-8. Promover para Graph se replicável:
-   - snippet mínimo + validação + armadilhas documentadas.
+8. No modo Obsidian-only, confirme arquivo novo em `context-hub/05_INBOX/byterover-imports/`.
+9. Promover para Graph se replicavel:
+   - snippet minimo + validacao + armadilhas documentadas.
