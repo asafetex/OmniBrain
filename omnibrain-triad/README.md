@@ -13,10 +13,13 @@ Transformar qualquer tarefa em um fluxo diff-first com consenso multiagente, reg
   - Gemini CLI como auditor sistemico.
 - Context Hub em Obsidian (`context-hub/`) com Skill Graph inicial.
 - Ferramentas locais sem API (`tools/`) para:
+  - montar context bundle para handoff de execucao,
   - gerar Change Package por `git diff`,
   - rodar PreGate opcional e Gate principal,
+  - recuperar sessao travada com relatorio de retomada,
   - registrar memoria no ByteRover CLI ou fallback local,
   - promover notas do INBOX para o Graph.
+- Politica declarativa de roteamento em `configs/routing.yaml`.
 - Template de projeto (`project-template/`) com `CLAUDE.md` e `AGENTS.md`.
 - `bootstrap.py` para recriar toda a estrutura automaticamente.
 
@@ -46,18 +49,24 @@ Transformar qualquer tarefa em um fluxo diff-first com consenso multiagente, reg
    - deixe `gemini.enabled = false` no ciclo 1 se usar fallback manual.
 5. No repositorio alvo, gere Change Package:
    - `python tools/make_change_package.py --repo . --level L3 --goal "..." --graph-links "agents/triad-protocol.md,disciplines/data-engineering/skills/spark-sql/joins.md"`
-6. Rode Gate:
+6. (Opcional recomendado) monte contexto consolidado:
+   - `python tools/build_context_bundle.py --repo . --task "..." --level L3 --graph-links "disciplines/agents/skills/triad-protocol.md,disciplines/agents/skills/consensus-gate.md"`
+   - use `tmp/context-bundles/CTX-*.md` como handoff para executor/auditor.
+7. Rode Gate:
    - `python tools/run_gate.py --change-package tmp/change-packages/<Change-ID>.md`
-7. Se Gemini manual:
+8. Se Gemini manual:
    - use `tmp/manual-prompts/<Change-ID>/gemini_prompt.md`;
    - salve resposta em `tmp/manual-responses/<Change-ID>/gemini.md`;
    - rode Gate novamente para decisao final.
-8. Registre `WIN` ou `LESSON`:
+9. Se sessao travar, gere retomada:
+   - `python tools/recover_session.py --repo . --change-id <Change-ID>`
+   - use `tmp/recovery-reports/REC-*.md` como prompt de retomada.
+10. Registre `WIN` ou `LESSON`:
    - `python tools/record_to_byterover.py --type WIN --project myproj --topic join-explode --file tmp/gate-results/<Change-ID>.md --tags "#discipline/data-engineering,#type/win,#project/myproj"`
-9. Promova para o Graph quando reutilizavel:
+11. Promova para o Graph quando reutilizavel:
    - `python tools/promote_to_obsidian.py --list`
    - `python tools/promote_to_obsidian.py --source context-hub/05_INBOX/byterover-imports/<arquivo>.md --target disciplines/data-engineering/skills/spark-sql/`
-10. (Opcional) validar testes no sandbox:
+12. (Opcional) validar testes no sandbox:
    - `.\.venv\Scripts\python.exe -m pytest -q`
 
 ## Estrutura

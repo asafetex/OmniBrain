@@ -1,0 +1,75 @@
+version: 1
+default_executor: claude_code
+default_reviewers:
+  - codex
+fallback_reviewers:
+  - gemini
+
+levels:
+  L1:
+    gate_required: false
+    pregate_optional: false
+    reviewers: []
+    decision_rule: not_required
+  L2:
+    gate_required: false
+    pregate_optional: true
+    reviewers:
+      - codex
+      - gemini
+    decision_rule: any_reject_reject_else_needs_human
+  L3:
+    gate_required: true
+    pregate_optional: true
+    reviewers:
+      - codex
+      - gemini
+    decision_rule: codex_or_gemini_reject_reject_both_approve_approve_else_conflict
+
+intents:
+  spark_sql_join:
+    keywords:
+      - join explode
+      - many-to-many
+      - dedupe keys
+    graph_nodes:
+      - disciplines/data-engineering/skills/spark-sql/joins.md
+      - disciplines/data-engineering/skills/data-quality/duplicates.md
+    preferred_executor: codex
+  spark_sql_performance:
+    keywords:
+      - shuffle
+      - broadcast
+      - partition
+      - cache
+    graph_nodes:
+      - disciplines/data-engineering/skills/spark-sql/performance.md
+      - disciplines/data-engineering/skills/spark-sql/windows.md
+    preferred_executor: codex
+  incremental_pipeline:
+    keywords:
+      - upsert
+      - merge
+      - watermark
+      - idempotent
+    graph_nodes:
+      - disciplines/data-engineering/skills/spark-sql/incremental.md
+      - disciplines/data-engineering/skills/data-quality/nulls.md
+    preferred_executor: claude_code
+  governance_l3:
+    keywords:
+      - l3 gate
+      - triad
+      - consensus
+    graph_nodes:
+      - disciplines/agents/skills/triad-protocol.md
+      - disciplines/agents/skills/consensus-gate.md
+      - disciplines/agents/skills/change-package.md
+    preferred_executor: claude_code
+
+manual_fallback:
+  manual_prompts_dir: tmp/manual-prompts
+  manual_responses_dir: tmp/manual-responses
+  notes:
+    - If auditor CLI is unavailable, save manual response with explicit VERDICT line.
+    - Manual response must be newer than current prompt file.

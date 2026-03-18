@@ -22,6 +22,7 @@ FILES = [
     "docs/09_mcp_optional.md",
     "docs/10_faq.md",
     "docs/migration_byterover_cli_2.md",
+    "configs/routing.yaml",
     "context-hub/README.md",
     "context-hub/00_HOME.md",
     "context-hub/01_MANIFEST/manifest.md",
@@ -58,8 +59,10 @@ FILES = [
     "project-template/context-hub/README.md",
     "tools/README.md",
     "tools/config.example.json",
+    "tools/build_context_bundle.py",
     "tools/make_change_package.py",
     "tools/run_gate.py",
+    "tools/recover_session.py",
     "tools/record_to_byterover.py",
     "tools/promote_to_obsidian.py",
     "tools/templates/change_package.md",
@@ -102,4 +105,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

@@ -5,9 +5,11 @@ Scripts locais para orquestracao sem API.
 ## Arquivos
 
 - `make_change_package.py`: gera Change Package com base em `git diff`.
+- `build_context_bundle.py`: monta bundle de contexto (repo + grafo + memoria recente).
 - `run_gate.py`: roda PreGate opcional e Gate principal por CLIs configuradas.
 - `record_to_byterover.py`: registra memoria no ByteRover ou fallback INBOX.
 - `promote_to_obsidian.py`: promove notas do INBOX para o Graph.
+- `recover_session.py`: reconstrui estado de sessao a partir de gate-results e repositorio atual.
 - `config.example.json`: templates de comando (copiar para `config.json`).
 - `templates/`: markdown de Change Package e prompts de review.
 
@@ -28,10 +30,18 @@ Modo recomendado agora:
 
 ```bash
 python tools/make_change_package.py --repo . --level L3 --goal "..."
+python tools/build_context_bundle.py --repo . --task "..." --level L3 --graph-links "disciplines/agents/skills/triad-protocol.md,disciplines/agents/skills/consensus-gate.md"
 python tools/run_gate.py --change-package tmp/change-packages/<Change-ID>.md
 python tools/record_to_byterover.py --type WIN --project myproj --topic mytopic --file tmp/gate-results/<Change-ID>.md --tags "#project/myproj,#type/win"
+python tools/recover_session.py --repo . --change-id <Change-ID>
 python tools/promote_to_obsidian.py --list
 ```
+
+## Routing policy
+
+- Arquivo declarativo: `configs/routing.yaml`.
+- Define politica por nivel (`L1/L2/L3`), revisores padrao e roteamento por intent.
+- Os scripts atuais nao dependem de parser YAML; use o arquivo como contrato operacional unico do time.
 
 ## Gate com resposta manual
 

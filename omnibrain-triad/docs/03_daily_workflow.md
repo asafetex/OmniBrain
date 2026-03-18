@@ -7,6 +7,7 @@
 2. Rotear contexto:
    - Use `project-template/CLAUDE.md`.
    - Abra 2 a 5 nos do Skill Graph.
+   - Opcional: gerar bundle consolidado com `tools/build_context_bundle.py`.
 3. Executar `diff-first` em branch:
    - Planejar, implementar, revisar apenas por `git diff`.
 4. Rodar PreGate opcional e Gate obrigatorio quando aplicavel:
@@ -68,3 +69,17 @@ python tools/record_to_byterover.py \
 8. No modo Obsidian-only, confirme arquivo novo em `context-hub/05_INBOX/byterover-imports/`.
 9. Promover para Graph se replicavel:
    - snippet minimo + validacao + armadilhas documentadas.
+
+## Retomada de sessao travada
+
+Quando a execucao interromper no meio:
+
+1. Rode:
+
+```bash
+python tools/recover_session.py --repo . --change-id <Change-ID>
+```
+
+2. Leia o relatorio gerado em `tmp/recovery-reports/REC-*.md`.
+3. Use o bloco `Recovery Prompt Seed` para reiniciar em novo executor.
+4. Se houver `CONFLICT` ou `UNKNOWN`, complete respostas manuais faltantes e rerode o Gate.

@@ -89,6 +89,10 @@ Copy-Item tools/config.example.json tools/config.json
    - `enabled`
    - `timeout_seconds` por auditor (opcional)
 4. Nao invente flags: o script executa exatamente o que estiver no config.
+5. Revise a politica em `configs/routing.yaml`:
+   - niveis L1/L2/L3
+   - revisores padrao
+   - intents e graph nodes recomendados.
 
 Config inicial recomendado para amanha:
 - `codex.enabled = true` com `args = ["review", "-"]`
@@ -115,7 +119,9 @@ node C:\Users\PC\AppData\Roaming\npm\node_modules\byterover-cli\bin\run.js statu
 
 ```bash
 python tools/make_change_package.py --repo . --level L1 --goal "teste de setup"
+python tools/build_context_bundle.py --repo . --task "teste de contexto" --level L2 --graph-links "disciplines/agents/skills/triad-protocol.md"
 python tools/run_gate.py --change-package tmp/change-packages/<Change-ID>.md
+python tools/recover_session.py --repo . --change-id <Change-ID>
 python tools/record_to_byterover.py --type PLAN --project omnibrain --topic setup --text "setup validado" --tags "#project/omnibrain,#type/plan"
 python tools/promote_to_obsidian.py --list
 ```

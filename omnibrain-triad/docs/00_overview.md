@@ -1,19 +1,20 @@
 # 00 Overview
 
-OmniBrain TRIAD unifica três camadas:
+OmniBrain TRIAD unifica tres camadas:
 
-1. Governança de execução (TRIAD): Claude executa, Codex audita técnico, Gemini audita sistêmico.
-2. Memória dinâmica de execução: ByteRover CLI 2.0 (ou fallback local no INBOX).
-3. Hub curado em Obsidian: Skill Graph com notas atômicas e políticas anti-poluição.
+1. Governanca de execucao (TRIAD): Claude executa, Codex audita tecnico, Gemini audita sistemico.
+2. Memoria dinamica de execucao: ByteRover CLI 2.0 (ou fallback local no INBOX).
+3. Hub curado em Obsidian: Skill Graph com notas atomicas e politica anti-poluicao.
 
 ## Escopo do MVP
 
 - Funciona sem MCP.
 - Funciona sem API keys.
 - Usa somente CLIs logados e scripts locais em Python stdlib.
-- Implementa fluxo `diff-first` com Gate obrigatório em L3.
+- Implementa fluxo `diff-first` com Gate obrigatorio em L3.
+- Inclui bundle de contexto (`tools/build_context_bundle.py`) e recuperacao de sessao (`tools/recover_session.py`).
 
-## Árvore do repositório
+## Arvore do repositorio
 
 ```text
 omnibrain-triad/
@@ -23,9 +24,9 @@ omnibrain-triad/
   context-hub/
   project-template/
   tools/
+  configs/
 ```
 
 ## Frase guia
 
-Transformar qualquer tarefa em um fluxo diff-first com consenso multiagente, registrando PLAN/REVIEW/LESSON/WIN na memória dinâmica e promovendo apenas vitórias executáveis para o Hub curado.
-
+Transformar qualquer tarefa em um fluxo diff-first com consenso multiagente, registrando PLAN/REVIEW/LESSON/WIN na memoria dinamica e promovendo apenas vitorias executaveis para o Hub curado.
