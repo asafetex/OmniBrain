@@ -93,6 +93,8 @@ Copy-Item tools/config.example.json tools/config.json
    - niveis L1/L2/L3
    - revisores padrao
    - intents e graph nodes recomendados.
+6. Revise o espelho executavel em `configs/routing.json`:
+   - `route_task.py` e `build_context_bundle.py --auto-route` leem esse arquivo.
 
 Config inicial recomendado para amanha:
 - `codex.enabled = true` com `args = ["review", "-"]`
@@ -119,7 +121,9 @@ node C:\Users\PC\AppData\Roaming\npm\node_modules\byterover-cli\bin\run.js statu
 
 ```bash
 python tools/make_change_package.py --repo . --level L1 --goal "teste de setup"
+python tools/route_task.py --task "teste join explode" --level L3
 python tools/build_context_bundle.py --repo . --task "teste de contexto" --level L2 --graph-links "disciplines/agents/skills/triad-protocol.md"
+python tools/build_context_bundle.py --repo . --task "teste de contexto" --level L2 --auto-route
 python tools/run_gate.py --change-package tmp/change-packages/<Change-ID>.md
 python tools/recover_session.py --repo . --change-id <Change-ID>
 python tools/record_to_byterover.py --type PLAN --project omnibrain --topic setup --text "setup validado" --tags "#project/omnibrain,#type/plan"

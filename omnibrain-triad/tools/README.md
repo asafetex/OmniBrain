@@ -5,6 +5,7 @@ Scripts locais para orquestracao sem API.
 ## Arquivos
 
 - `make_change_package.py`: gera Change Package com base em `git diff`.
+- `route_task.py`: aplica politica de roteamento e sugere executor/revisores/nos de grafo.
 - `build_context_bundle.py`: monta bundle de contexto (repo + grafo + memoria recente).
 - `run_gate.py`: roda PreGate opcional e Gate principal por CLIs configuradas.
 - `record_to_byterover.py`: registra memoria no ByteRover ou fallback INBOX.
@@ -30,7 +31,9 @@ Modo recomendado agora:
 
 ```bash
 python tools/make_change_package.py --repo . --level L3 --goal "..."
+python tools/route_task.py --task "join explode no spark" --level L3
 python tools/build_context_bundle.py --repo . --task "..." --level L3 --graph-links "disciplines/agents/skills/triad-protocol.md,disciplines/agents/skills/consensus-gate.md"
+python tools/build_context_bundle.py --repo . --task "join explode no spark" --level L3 --auto-route
 python tools/run_gate.py --change-package tmp/change-packages/<Change-ID>.md
 python tools/record_to_byterover.py --type WIN --project myproj --topic mytopic --file tmp/gate-results/<Change-ID>.md --tags "#project/myproj,#type/win"
 python tools/recover_session.py --repo . --change-id <Change-ID>
@@ -39,9 +42,9 @@ python tools/promote_to_obsidian.py --list
 
 ## Routing policy
 
-- Arquivo declarativo: `configs/routing.yaml`.
+- Arquivos declarativos: `configs/routing.yaml` (humano) e `configs/routing.json` (executavel).
 - Define politica por nivel (`L1/L2/L3`), revisores padrao e roteamento por intent.
-- Os scripts atuais nao dependem de parser YAML; use o arquivo como contrato operacional unico do time.
+- `route_task.py` e `build_context_bundle.py --auto-route` usam `configs/routing.json`.
 
 ## Gate com resposta manual
 

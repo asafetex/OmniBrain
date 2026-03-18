@@ -7,6 +7,7 @@
 2. Rotear contexto:
    - Use `project-template/CLAUDE.md`.
    - Abra 2 a 5 nos do Skill Graph.
+   - Opcional: rode `tools/route_task.py` para escolher intent/executor/revisores.
    - Opcional: gerar bundle consolidado com `tools/build_context_bundle.py`.
 3. Executar `diff-first` em branch:
    - Planejar, implementar, revisar apenas por `git diff`.
@@ -83,3 +84,14 @@ python tools/recover_session.py --repo . --change-id <Change-ID>
 2. Leia o relatorio gerado em `tmp/recovery-reports/REC-*.md`.
 3. Use o bloco `Recovery Prompt Seed` para reiniciar em novo executor.
 4. Se houver `CONFLICT` ou `UNKNOWN`, complete respostas manuais faltantes e rerode o Gate.
+
+## Roteamento automatico (opcional)
+
+Para tarefas repetitivas, rode:
+
+```bash
+python tools/route_task.py --task "join explode em spark" --level L3
+python tools/build_context_bundle.py --repo . --task "join explode em spark" --level L3 --auto-route
+```
+
+Isso aplica `configs/routing.json` e preenche nos de grafo automaticamente quando `--graph-links` nao for informado.
