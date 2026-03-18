@@ -122,6 +122,7 @@ node C:\Users\PC\AppData\Roaming\npm\node_modules\byterover-cli\bin\run.js statu
 ```bash
 python tools/make_change_package.py --repo . --level L1 --goal "teste de setup"
 python tools/route_task.py --task "teste join explode" --level L3
+python tools/start_task_flow.py --repo . --task "teste join explode" --level L3
 python tools/build_context_bundle.py --repo . --task "teste de contexto" --level L2 --graph-links "disciplines/agents/skills/triad-protocol.md"
 python tools/build_context_bundle.py --repo . --task "teste de contexto" --level L2 --auto-route
 python tools/run_gate.py --change-package tmp/change-packages/<Change-ID>.md

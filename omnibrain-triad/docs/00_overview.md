@@ -12,7 +12,7 @@ OmniBrain TRIAD unifica tres camadas:
 - Funciona sem API keys.
 - Usa somente CLIs logados e scripts locais em Python stdlib.
 - Implementa fluxo `diff-first` com Gate obrigatorio em L3.
-- Inclui roteamento de tarefa (`tools/route_task.py`), bundle de contexto (`tools/build_context_bundle.py`) e recuperacao de sessao (`tools/recover_session.py`).
+- Inclui roteamento de tarefa (`tools/route_task.py`), fluxo inicial unificado (`tools/start_task_flow.py`), bundle de contexto (`tools/build_context_bundle.py`) e recuperacao de sessao (`tools/recover_session.py`).
 
 ## Arvore do repositorio
 

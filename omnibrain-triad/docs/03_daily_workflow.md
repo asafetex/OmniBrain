@@ -91,6 +91,7 @@ Para tarefas repetitivas, rode:
 
 ```bash
 python tools/route_task.py --task "join explode em spark" --level L3
+python tools/start_task_flow.py --repo . --task "join explode em spark" --level L3
 python tools/build_context_bundle.py --repo . --task "join explode em spark" --level L3 --auto-route
 ```
 

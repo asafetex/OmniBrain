@@ -52,24 +52,27 @@ Transformar qualquer tarefa em um fluxo diff-first com consenso multiagente, reg
    - `python tools/make_change_package.py --repo . --level L3 --goal "..." --graph-links "agents/triad-protocol.md,disciplines/data-engineering/skills/spark-sql/joins.md"`
 6. (Opcional recomendado) roteie a tarefa:
    - `python tools/route_task.py --task "..." --level L3`
-7. (Opcional recomendado) monte contexto consolidado:
+7. (Opcional recomendado) gere os artefatos iniciais em um comando:
+   - `python tools/start_task_flow.py --repo . --task "..." --level L3`
+   - isso ja produz route + context bundle + change package.
+8. (Opcional recomendado) monte contexto consolidado:
    - `python tools/build_context_bundle.py --repo . --task "..." --level L3 --auto-route`
    - use `tmp/context-bundles/CTX-*.md` como handoff para executor/auditor.
-8. Rode Gate:
+9. Rode Gate:
    - `python tools/run_gate.py --change-package tmp/change-packages/<Change-ID>.md`
-9. Se Gemini manual:
+10. Se Gemini manual:
    - use `tmp/manual-prompts/<Change-ID>/gemini_prompt.md`;
    - salve resposta em `tmp/manual-responses/<Change-ID>/gemini.md`;
    - rode Gate novamente para decisao final.
-10. Se sessao travar, gere retomada:
+11. Se sessao travar, gere retomada:
    - `python tools/recover_session.py --repo . --change-id <Change-ID>`
    - use `tmp/recovery-reports/REC-*.md` como prompt de retomada.
-11. Registre `WIN` ou `LESSON`:
+12. Registre `WIN` ou `LESSON`:
    - `python tools/record_to_byterover.py --type WIN --project myproj --topic join-explode --file tmp/gate-results/<Change-ID>.md --tags "#discipline/data-engineering,#type/win,#project/myproj"`
-12. Promova para o Graph quando reutilizavel:
+13. Promova para o Graph quando reutilizavel:
    - `python tools/promote_to_obsidian.py --list`
    - `python tools/promote_to_obsidian.py --source context-hub/05_INBOX/byterover-imports/<arquivo>.md --target disciplines/data-engineering/skills/spark-sql/`
-13. (Opcional) validar testes no sandbox:
+14. (Opcional) validar testes no sandbox:
    - `.\.venv\Scripts\python.exe -m pytest -q`
 
 ## Estrutura
