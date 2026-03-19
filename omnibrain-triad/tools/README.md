@@ -7,6 +7,7 @@ Scripts locais para orquestracao sem API.
 - `make_change_package.py`: gera Change Package com base em `git diff`.
 - `route_task.py`: aplica politica de roteamento e sugere executor/revisores/nos de grafo.
 - `start_task_flow.py`: executa `route -> context bundle -> change package` em um comando.
+- `preflight_check.py`: valida ambiente/config antes de iniciar fluxo L2/L3.
 - `build_context_bundle.py`: monta bundle de contexto (repo + grafo + memoria recente).
 - `run_gate.py`: roda PreGate opcional e Gate principal por CLIs configuradas.
 - `record_to_byterover.py`: registra memoria no ByteRover ou fallback INBOX.
@@ -33,7 +34,9 @@ Modo recomendado agora:
 ```bash
 python tools/make_change_package.py --repo . --level L3 --goal "..."
 python tools/route_task.py --task "join explode no spark" --level L3
+python tools/preflight_check.py --repo .
 python tools/start_task_flow.py --repo . --task "join explode no spark" --level L3
+python tools/start_task_flow.py --repo . --task "join explode no spark" --level L3 --preflight
 python tools/build_context_bundle.py --repo . --task "..." --level L3 --graph-links "disciplines/agents/skills/triad-protocol.md,disciplines/agents/skills/consensus-gate.md"
 python tools/build_context_bundle.py --repo . --task "join explode no spark" --level L3 --auto-route
 python tools/run_gate.py --change-package tmp/change-packages/<Change-ID>.md

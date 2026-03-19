@@ -90,8 +90,9 @@ python tools/recover_session.py --repo . --change-id <Change-ID>
 Para tarefas repetitivas, rode:
 
 ```bash
+python tools/preflight_check.py --repo .
 python tools/route_task.py --task "join explode em spark" --level L3
-python tools/start_task_flow.py --repo . --task "join explode em spark" --level L3
+python tools/start_task_flow.py --repo . --task "join explode em spark" --level L3 --preflight
 python tools/build_context_bundle.py --repo . --task "join explode em spark" --level L3 --auto-route
 ```
 

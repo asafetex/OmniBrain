@@ -62,6 +62,7 @@ FILES = [
     "tools/config.example.json",
     "tools/build_context_bundle.py",
     "tools/make_change_package.py",
+    "tools/preflight_check.py",
     "tools/route_task.py",
     "tools/start_task_flow.py",
     "tools/run_gate.py",

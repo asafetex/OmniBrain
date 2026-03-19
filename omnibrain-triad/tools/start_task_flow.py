@@ -70,6 +70,7 @@ def main() -> int:
     parser.add_argument("--intent", default="", help="Explicit intent id.")
     parser.add_argument("--graph-links", default="", help="Comma-separated graph links override.")
     parser.add_argument("--routing-config", default="configs/routing.json", help="Routing JSON path.")
+    parser.add_argument("--preflight", action="store_true", help="Run preflight checks before generating artifacts.")
     parser.add_argument("--staged", action="store_true", help="Use staged diff for change package.")
     parser.add_argument("--skip-route", action="store_true", help="Skip route artifact generation.")
     parser.add_argument("--skip-bundle", action="store_true", help="Skip context bundle generation.")
@@ -90,6 +91,21 @@ def main() -> int:
 
     intent_name, intent_payload = detect_intent(args.task, routing.get("intents", {}), args.intent.strip())
     graph_links = parse_csv(args.graph_links) or intent_payload.get("graph_nodes", [])
+
+    if args.preflight:
+        preflight_cmd = [
+            sys.executable,
+            str(tools_dir / "preflight_check.py"),
+            "--repo",
+            str(target_repo),
+        ]
+        rc, out, err = run_command(preflight_cmd, cwd=repo_root)
+        if out:
+            print(out)
+        if err:
+            print(err, file=sys.stderr)
+        if rc != 0:
+            return rc
 
     ts = dt.datetime.now().strftime("%Y%m%d-%H%M%S")
     flow_id = f"FLOW-{ts}"
