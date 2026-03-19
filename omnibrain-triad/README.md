@@ -17,6 +17,8 @@ Transformar qualquer tarefa em um fluxo diff-first com consenso multiagente, reg
   - montar context bundle para handoff de execucao,
   - gerar Change Package por `git diff`,
   - rodar PreGate opcional e Gate principal,
+  - bloquear push L3 sem Gate APPROVE via hook local,
+  - gerar analytics de memoria (WIN/LESSON/REVIEW),
   - recuperar sessao travada com relatorio de retomada,
   - registrar memoria no ByteRover CLI ou fallback local,
   - promover notas do INBOX para o Graph.
@@ -62,19 +64,24 @@ Transformar qualquer tarefa em um fluxo diff-first com consenso multiagente, reg
    - use `tmp/context-bundles/CTX-*.md` como handoff para executor/auditor.
 10. Rode Gate:
    - `python tools/run_gate.py --change-package tmp/change-packages/<Change-ID>.md`
-11. Se Gemini manual:
+11. (Opcional recomendado) instale enforcement local de push:
+   - `python tools/install_pre_push_hook.py --repo .`
+   - bloqueia `git push` de L3 sem `APPROVE` no Gate.
+12. (Opcional recomendado) gere stats semanais de valor:
+   - `python tools/triad_stats.py --days 7`
+13. Se Gemini manual:
    - use `tmp/manual-prompts/<Change-ID>/gemini_prompt.md`;
    - salve resposta em `tmp/manual-responses/<Change-ID>/gemini.md`;
    - rode Gate novamente para decisao final.
-12. Se sessao travar, gere retomada:
+14. Se sessao travar, gere retomada:
    - `python tools/recover_session.py --repo . --change-id <Change-ID>`
    - use `tmp/recovery-reports/REC-*.md` como prompt de retomada.
-13. Registre `WIN` ou `LESSON`:
+15. Registre `WIN` ou `LESSON`:
    - `python tools/record_to_byterover.py --type WIN --project myproj --topic join-explode --file tmp/gate-results/<Change-ID>.md --tags "#discipline/data-engineering,#type/win,#project/myproj"`
-14. Promova para o Graph quando reutilizavel:
+16. Promova para o Graph quando reutilizavel:
    - `python tools/promote_to_obsidian.py --list`
    - `python tools/promote_to_obsidian.py --source context-hub/05_INBOX/byterover-imports/<arquivo>.md --target disciplines/data-engineering/skills/spark-sql/`
-15. (Opcional) validar testes no sandbox:
+17. (Opcional) validar testes no sandbox:
    - `.\.venv\Scripts\python.exe -m pytest -q`
 
 ## Estrutura

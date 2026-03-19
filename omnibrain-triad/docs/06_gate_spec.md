@@ -81,3 +81,16 @@ O resultado em `tmp/gate-results/<Change-ID>.md` inclui:
 - DeepSeek e CodeRabbit podem rodar antes.
 - O resultado do PreGate não fecha L3 sozinho.
 - O Gate principal continua sendo Codex + Gemini.
+
+## Enforcement local de push (opcional recomendado)
+
+Para tornar a regra L3 executavel no dia a dia:
+
+1. Instale o hook:
+   - `python tools/install_pre_push_hook.py --repo .`
+2. O hook chama:
+   - `tools/l3_pre_push_guard.py`
+3. Regra aplicada no push:
+   - se ultimo Change Package for L3, exige `Final Decision: APPROVE` no arquivo de gate correspondente.
+4. Bypass emergencial:
+   - `git push --no-verify` (somente em excecao).

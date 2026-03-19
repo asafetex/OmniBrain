@@ -94,6 +94,27 @@ python tools/preflight_check.py --repo .
 python tools/route_task.py --task "join explode em spark" --level L3
 python tools/start_task_flow.py --repo . --task "join explode em spark" --level L3 --preflight
 python tools/build_context_bundle.py --repo . --task "join explode em spark" --level L3 --auto-route
+python tools/install_pre_push_hook.py --repo .
 ```
 
 Isso aplica `configs/routing.json` e preenche nos de grafo automaticamente quando `--graph-links` nao for informado.
+
+## Governanca no push (opcional recomendado)
+
+Para reduzir bypass humano em L3:
+
+1. Instale hook:
+
+```bash
+python tools/install_pre_push_hook.py --repo .
+```
+
+2. O `git push` passa a validar:
+   - ultimo Change Package,
+   - se for L3, exige Gate `APPROVE`.
+
+3. Relatorio de valor semanal:
+
+```bash
+python tools/triad_stats.py --days 7
+```

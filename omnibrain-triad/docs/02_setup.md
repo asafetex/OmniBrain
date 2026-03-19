@@ -124,10 +124,13 @@ python tools/make_change_package.py --repo . --level L1 --goal "teste de setup"
 python tools/route_task.py --task "teste join explode" --level L3
 python tools/preflight_check.py --repo .
 python tools/start_task_flow.py --repo . --task "teste join explode" --level L3 --preflight
+python tools/install_pre_push_hook.py --repo .
+python tools/l3_pre_push_guard.py --repo .
 python tools/build_context_bundle.py --repo . --task "teste de contexto" --level L2 --graph-links "disciplines/agents/skills/triad-protocol.md"
 python tools/build_context_bundle.py --repo . --task "teste de contexto" --level L2 --auto-route
 python tools/run_gate.py --change-package tmp/change-packages/<Change-ID>.md
 python tools/recover_session.py --repo . --change-id <Change-ID>
+python tools/triad_stats.py --days 7
 python tools/record_to_byterover.py --type PLAN --project omnibrain --topic setup --text "setup validado" --tags "#project/omnibrain,#type/plan"
 python tools/promote_to_obsidian.py --list
 ```

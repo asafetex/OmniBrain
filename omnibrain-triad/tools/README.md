@@ -8,6 +8,9 @@ Scripts locais para orquestracao sem API.
 - `route_task.py`: aplica politica de roteamento e sugere executor/revisores/nos de grafo.
 - `start_task_flow.py`: executa `route -> context bundle -> change package` em um comando.
 - `preflight_check.py`: valida ambiente/config antes de iniciar fluxo L2/L3.
+- `install_pre_push_hook.py`: instala hook de `pre-push` para bloquear L3 sem Gate APPROVE.
+- `l3_pre_push_guard.py`: verificador usado pelo hook para validar ultimo Change Package L3.
+- `triad_stats.py`: gera resumo de atividade (WIN/LESSON/REVIEW) por janela de tempo.
 - `build_context_bundle.py`: monta bundle de contexto (repo + grafo + memoria recente).
 - `run_gate.py`: roda PreGate opcional e Gate principal por CLIs configuradas.
 - `record_to_byterover.py`: registra memoria no ByteRover ou fallback INBOX.
@@ -35,11 +38,14 @@ Modo recomendado agora:
 python tools/make_change_package.py --repo . --level L3 --goal "..."
 python tools/route_task.py --task "join explode no spark" --level L3
 python tools/preflight_check.py --repo .
+python tools/install_pre_push_hook.py --repo .
 python tools/start_task_flow.py --repo . --task "join explode no spark" --level L3
 python tools/start_task_flow.py --repo . --task "join explode no spark" --level L3 --preflight
 python tools/build_context_bundle.py --repo . --task "..." --level L3 --graph-links "disciplines/agents/skills/triad-protocol.md,disciplines/agents/skills/consensus-gate.md"
 python tools/build_context_bundle.py --repo . --task "join explode no spark" --level L3 --auto-route
 python tools/run_gate.py --change-package tmp/change-packages/<Change-ID>.md
+python tools/l3_pre_push_guard.py --repo .
+python tools/triad_stats.py --days 7
 python tools/record_to_byterover.py --type WIN --project myproj --topic mytopic --file tmp/gate-results/<Change-ID>.md --tags "#project/myproj,#type/win"
 python tools/recover_session.py --repo . --change-id <Change-ID>
 python tools/promote_to_obsidian.py --list
@@ -50,6 +56,14 @@ python tools/promote_to_obsidian.py --list
 - Arquivos declarativos: `configs/routing.yaml` (humano) e `configs/routing.json` (executavel).
 - Define politica por nivel (`L1/L2/L3`), revisores padrao e roteamento por intent.
 - `route_task.py` e `build_context_bundle.py --auto-route` usam `configs/routing.json`.
+
+## Hook L3 (pre-push)
+
+- Instale uma vez no repo alvo:
+  - `python tools/install_pre_push_hook.py --repo <repo-alvo>`
+- O hook bloqueia `git push` quando o ultimo Change Package L3 nao tiver `Final Decision: APPROVE`.
+- Bypass emergencial (nao recomendado):
+  - `git push --no-verify`
 
 ## Gate com resposta manual
 
