@@ -38,12 +38,17 @@ node C:\Users\PC\AppData\Roaming\npm\node_modules\byterover-cli\bin\run.js --hel
 3. Escolha `omnibrain-triad/context-hub/`.
 4. Fixe `00_HOME.md` e `02_GRAPH/index.md`.
 
-## Memoria compartilhada com Obsidian (free)
+## Memoria compartilhada (perfis operacionais)
 
-Modo recomendado agora:
-- manter `byterover.enabled = false` em `tools/config.json`;
+Perfil A (Obsidian-only, free):
+- `byterover.enabled = false` em `tools/config.json`;
 - registrar memoria no INBOX (`context-hub/05_INBOX/byterover-imports/`);
 - sincronizar o vault por GitHub (privado) para compartilhamento entre maquinas.
+
+Perfil B (ByteRover ativo):
+- `byterover.enabled = true`;
+- `cmd/args` do ByteRover validados via `--help`;
+- fallback automatico para INBOX quando a CLI falhar.
 
 Fluxo Git para vault:
 1. `git add context-hub/`
@@ -96,17 +101,17 @@ Copy-Item tools/config.example.json tools/config.json
 6. Revise o espelho executavel em `configs/routing.json`:
    - `route_task.py` e `build_context_bundle.py --auto-route` leem esse arquivo.
 
-Config inicial recomendado para amanha:
+Config inicial recomendado:
 - `codex.enabled = true` com `args = ["review", "-"]`
 - `codex.timeout_seconds = 240` para reduzir timeout em reviews maiores
 - `gemini.enabled = false` (fallback manual no ciclo 1)
 - `deepseek.enabled = false`
 - `coderabbit.enabled = false`
-- `byterover.enabled = false` (modo Obsidian-only)
+- `byterover.enabled = true` quando a CLI estiver validada (senao `false`)
 
-## ByteRover opcional (quando ativar)
+## ByteRover (quando ativar)
 
-Quando quiser ativar ByteRover:
+Quando for ativar ByteRover:
 1. valide CLI e login;
 2. configure `byterover.enabled = true` + `cmd/args` reais no `tools/config.json`;
 3. rode um teste com `record_to_byterover.py`.
@@ -149,4 +154,4 @@ python -m venv .venv
 ```
 
 Resultado esperado no sandbox de exemplo:
-- `10 passed`
+- `>= 10 passed` (o total pode aumentar conforme novos testes do drill L3)

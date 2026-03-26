@@ -50,11 +50,12 @@ python tools/make_change_package.py \
 python tools/run_gate.py --change-package tmp/change-packages/<Change-ID>.md
 ```
 
-5. Se Gemini estiver em fallback manual:
-   - copiar prompt de `tmp/manual-prompts/<Change-ID>/gemini_prompt.md`;
-   - executar no Gemini CLI manualmente;
-   - salvar resposta em `tmp/manual-responses/<Change-ID>/gemini.md`;
-   - rodar `run_gate.py` novamente para consolidar `VERDICT`.
+5. Se algum auditor estiver em fallback manual (Gemini e/ou Codex):
+   - copiar prompt em `tmp/manual-prompts/<Change-ID>/<auditor>_prompt.md`;
+   - executar no CLI correspondente manualmente;
+   - salvar resposta em `tmp/manual-responses/<Change-ID>/<auditor>.md`;
+   - garantir linha explicita `VERDICT: APPROVE` ou `VERDICT: REJECT`;
+   - rodar `run_gate.py` novamente para consolidar decisao.
 6. Resolver bloqueios, retestar e repetir ate `APPROVE`.
 7. Registrar memoria:
 
@@ -67,8 +68,9 @@ python tools/record_to_byterover.py \
   --tags "#discipline/data-engineering,#type/win,#project/omnibrain"
 ```
 
-8. No modo Obsidian-only, confirme arquivo novo em `context-hub/05_INBOX/byterover-imports/`.
-9. Promover para Graph se replicavel:
+8. Se estiver em Obsidian-only, confirme arquivo novo em `context-hub/05_INBOX/byterover-imports/`.
+9. Se ByteRover estiver ativo, valide o registro via CLI (`status`, `query` ou comando equivalente).
+10. Promover para Graph se replicavel:
    - snippet minimo + validacao + armadilhas documentadas.
 
 ## Retomada de sessao travada
