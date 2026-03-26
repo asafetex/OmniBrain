@@ -1,0 +1,22 @@
+services:
+  test:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    working_dir: /app
+    environment:
+      PYTHONPATH: /app
+      TRIAD_TIMEOUT_SECONDS: 120
+      TRIAD_ENCODING: utf-8
+    volumes:
+      - ./omnibrain-triad:/app:ro
+    command: pytest tests/ -v
+
+  lint:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    working_dir: /app
+    volumes:
+      - ./omnibrain-triad:/app:ro
+    command: ruff check tools/ tests/ bootstrap.py

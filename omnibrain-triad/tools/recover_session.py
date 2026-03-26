@@ -6,17 +6,12 @@ from __future__ import annotations
 import argparse
 import datetime as dt
 import re
-import subprocess
 from pathlib import Path
 
-
-def run_git(repo: Path, args: list[str]) -> tuple[bool, str]:
-    cmd = ["git", "-C", str(repo)] + args
-    proc = subprocess.run(cmd, text=True, capture_output=True)
-    if proc.returncode != 0:
-        message = proc.stderr.strip() or proc.stdout.strip() or f"git failed: {' '.join(cmd)}"
-        return False, message
-    return True, proc.stdout.strip()
+try:
+    from tools.utils import run_git
+except ModuleNotFoundError:
+    from utils import run_git
 
 
 def choose_gate_result(gate_dir: Path, change_id: str) -> Path:

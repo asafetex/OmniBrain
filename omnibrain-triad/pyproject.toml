@@ -1,0 +1,44 @@
+[project]
+name = "omnibrain-triad"
+version = "1.0.0"
+description = "Multi-agent governance framework for code quality with diff-first workflow"
+requires-python = ">=3.10"
+readme = "README.md"
+license = {text = "MIT"}
+
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=9.0.0",
+    "ruff>=0.8.0",
+]
+
+[project.scripts]
+triad-bootstrap = "bootstrap:main"
+triad-preflight = "tools.preflight_check:main"
+triad-route = "tools.route_task:main"
+triad-bundle = "tools.build_context_bundle:main"
+triad-change = "tools.make_change_package:main"
+triad-gate = "tools.run_gate:main"
+triad-recover = "tools.recover_session:main"
+triad-flow = "tools.start_task_flow:main"
+triad-stats = "tools.triad_stats:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["tools"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 88
+target-version = "py310"

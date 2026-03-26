@@ -4,3 +4,7 @@ omnibrain-triad/tools/config.json
 
 # ByteRover local context
 .brv/
+
+# Python cache artifacts
+__pycache__/
+*.pyc

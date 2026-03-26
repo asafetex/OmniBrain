@@ -4,34 +4,14 @@
 from __future__ import annotations
 
 import argparse
-import json
-import shutil
-import subprocess
-import sys
 from pathlib import Path
 
-
-def load_config(tools_dir: Path) -> dict:
-    cfg = tools_dir / "config.json"
-    if cfg.exists():
-        return json.loads(cfg.read_text(encoding="utf-8"))
-    return json.loads((tools_dir / "config.example.json").read_text(encoding="utf-8"))
-
-
-def command_exists(cmd: str) -> bool:
-    if not cmd:
-        return False
-    path_like = "\\" in cmd or "/" in cmd or ":" in cmd
-    if path_like:
-        return Path(cmd).exists()
-    return shutil.which(cmd) is not None
-
-
-def run_git(repo: Path, args: list[str]) -> tuple[bool, str]:
-    proc = subprocess.run(["git", "-C", str(repo)] + args, text=True, capture_output=True)
-    if proc.returncode != 0:
-        return False, proc.stderr.strip() or proc.stdout.strip()
-    return True, proc.stdout.strip()
+try:
+    from tools.config_env import load_config
+    from tools.utils import command_exists, run_git
+except ModuleNotFoundError:
+    from config_env import load_config
+    from utils import command_exists, run_git
 
 
 def check_list_item(results: list[tuple[str, str, str]], status: str, name: str, detail: str) -> None:
@@ -166,7 +146,4 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    if sys.version_info < (3, 10):
-        print("Python 3.10+ required.")
-        raise SystemExit(1)
     raise SystemExit(main())

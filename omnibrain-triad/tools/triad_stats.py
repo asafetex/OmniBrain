@@ -9,6 +9,11 @@ import re
 from collections import Counter
 from pathlib import Path
 
+try:
+    from tools.utils import get_repo_root
+except ModuleNotFoundError:
+    from utils import get_repo_root
+
 
 TYPE_RE = re.compile(r"^- Type:\s*([A-Z]+)\s*$", re.MULTILINE)
 PROJECT_RE = re.compile(r"^- Project:\s*([a-zA-Z0-9_.\-]+)\s*$", re.MULTILINE)
@@ -51,7 +56,7 @@ def main() -> int:
     args = parser.parse_args()
 
     tools_dir = Path(__file__).resolve().parent
-    repo_root = tools_dir.parent
+    repo_root = get_repo_root(tools_dir)
     today = dt.date.today()
     since = today - dt.timedelta(days=max(args.days, 1))
 

@@ -5,51 +5,24 @@ from __future__ import annotations
 
 import argparse
 import datetime as dt
-import json
-import subprocess
 from pathlib import Path
 
-
-def parse_csv(raw: str) -> list[str]:
-    return [item.strip() for item in raw.split(",") if item.strip()]
-
-
-def load_json(path: Path) -> dict:
-    if not path.exists():
-        raise FileNotFoundError(f"JSON config not found: {path}")
-    return json.loads(path.read_text(encoding="utf-8"))
-
-
-def detect_intent(task: str, intents: dict, explicit_intent: str) -> tuple[str, list[str]]:
-    if explicit_intent:
-        payload = intents.get(explicit_intent, {})
-        return explicit_intent, payload.get("graph_nodes", [])
-
-    text = task.lower()
-    best_name = ""
-    best_score = 0
-    best_nodes: list[str] = []
-    for name, payload in intents.items():
-        score = 0
-        for kw in payload.get("keywords", []):
-            if str(kw).lower() in text:
-                score += 1
-        if score > best_score:
-            best_score = score
-            best_name = name
-            best_nodes = payload.get("graph_nodes", [])
-    if best_name:
-        return best_name, best_nodes
-    return "generic", []
-
-
-def run_git(repo: Path, args: list[str]) -> tuple[bool, str]:
-    cmd = ["git", "-C", str(repo)] + args
-    proc = subprocess.run(cmd, text=True, capture_output=True)
-    if proc.returncode != 0:
-        message = proc.stderr.strip() or proc.stdout.strip() or f"git failed: {' '.join(cmd)}"
-        return False, message
-    return True, proc.stdout.strip()
+try:
+    from tools.utils import (
+        detect_intent,
+        load_json,
+        markdown_bullets,
+        parse_csv,
+        run_git,
+    )
+except ModuleNotFoundError:
+    from utils import (
+    detect_intent,
+    load_json,
+    markdown_bullets,
+    parse_csv,
+    run_git,
+)
 
 
 def excerpt_file(path: Path, max_lines: int, max_chars: int) -> str:
@@ -68,12 +41,6 @@ def list_recent_markdown(paths: list[Path], limit: int) -> list[Path]:
             files.extend([p for p in base.glob("*.md") if p.is_file()])
     files.sort(key=lambda p: p.stat().st_mtime, reverse=True)
     return files[:limit]
-
-
-def markdown_bullets(items: list[str], empty_label: str) -> str:
-    if not items:
-        return f"- {empty_label}"
-    return "\n".join(f"- {item}" for item in items)
 
 
 def build_repo_snapshot(repo: Path, max_diff_chars: int) -> dict[str, str]:
@@ -167,10 +134,12 @@ def main() -> int:
         if not cfg_path.is_absolute():
             cfg_path = (repo_root / cfg_path).resolve()
         policy = load_json(cfg_path)
-        detected_intent, detected_nodes = detect_intent(args.task, policy.get("intents", {}), intent_value)
+        detected_intent, detected_payload = detect_intent(
+            args.task, policy.get("intents", {}), intent_value
+        )
         intent_value = detected_intent
         if not graph_links:
-            graph_links = list(detected_nodes)
+            graph_links = list(detected_payload.get("graph_nodes", []))
 
     snapshot = build_repo_snapshot(target_repo, args.max_diff_chars)
     graph_section = load_graph_nodes(graph_root, graph_links, args.max_node_lines, 4000)

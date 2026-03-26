@@ -7,7 +7,6 @@ import argparse
 import shutil
 from pathlib import Path
 
-
 FILES = [
     "README.md",
     "docs/00_overview.md",
@@ -60,6 +59,8 @@ FILES = [
     "project-template/context-hub/README.md",
     "tools/README.md",
     "tools/config.example.json",
+    "tools/utils.py",
+    "tools/config_env.py",
     "tools/build_context_bundle.py",
     "tools/install_pre_push_hook.py",
     "tools/l3_pre_push_guard.py",
@@ -77,6 +78,11 @@ FILES = [
     "tools/templates/gemini_review_prompt.md",
     "tools/templates/deepseek_review_prompt.md",
     "tools/templates/coderabbit_review_prompt.md",
+    "tests/__init__.py",
+    "tests/conftest.py",
+    "pyproject.toml",
+    "ruff.toml",
+    ".env.example",
 ]
 
 

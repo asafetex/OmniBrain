@@ -5,17 +5,13 @@ from __future__ import annotations
 
 import argparse
 import datetime as dt
-import subprocess
 import sys
 from pathlib import Path
 
-
-def run_git(repo: Path, args: list[str]) -> str:
-    cmd = ["git", "-C", str(repo)] + args
-    proc = subprocess.run(cmd, text=True, capture_output=True)
-    if proc.returncode != 0:
-        raise RuntimeError(f"Git command failed: {' '.join(cmd)}\n{proc.stderr.strip()}")
-    return proc.stdout
+try:
+    from tools.utils import run_git_strict
+except ModuleNotFoundError:
+    from utils import run_git_strict
 
 
 def comma_to_bullets(raw: str | None, empty_label: str) -> str:
@@ -71,8 +67,8 @@ def main() -> int:
     name_only_args = ["diff", "--name-only", "--staged"] if args.staged else ["diff", "--name-only"]
 
     try:
-        git_diff = run_git(repo, diff_args).strip()
-        files = run_git(repo, name_only_args).strip()
+        git_diff = run_git_strict(repo, diff_args).strip()
+        files = run_git_strict(repo, name_only_args).strip()
     except RuntimeError as exc:
         print(str(exc), file=sys.stderr)
         return 1
@@ -112,4 +108,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

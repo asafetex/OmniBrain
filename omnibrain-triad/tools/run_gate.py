@@ -4,7 +4,6 @@
 from __future__ import annotations
 
 import argparse
-import json
 import re
 import shutil
 import subprocess
@@ -13,6 +12,11 @@ import unicodedata
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
+
+try:
+    from tools.config_env import load_config
+except ModuleNotFoundError:
+    from config_env import load_config
 
 
 VERDICT_RE = re.compile(r"^\s*VERDICT\s*:\s*(APPROVE|REJECT)\s*$", re.IGNORECASE | re.MULTILINE)
@@ -33,6 +37,7 @@ REJECT_SIGNAL_RE = re.compile(
     re.IGNORECASE,
 )
 
+
 @dataclass
 class AuditorResult:
     name: str
@@ -45,17 +50,6 @@ class AuditorResult:
     stderr: str
     manual_prompt_path: str
     manual_response_path: str
-
-
-def load_json(path: Path) -> dict:
-    return json.loads(path.read_text(encoding="utf-8"))
-
-
-def load_config(tools_dir: Path) -> dict:
-    cfg = tools_dir / "config.json"
-    if cfg.exists():
-        return load_json(cfg)
-    return load_json(tools_dir / "config.example.json")
 
 
 def parse_change_metadata(change_package: str) -> tuple[str, str, str]:
@@ -100,7 +94,7 @@ def build_prompt(template_path: Path, change_package: str) -> str:
 
 def run_cli(cmd: str, args: list[str], prompt: str, timeout_seconds: int, cwd: Path | None) -> tuple[int, str, str]:
     proc = subprocess.run(
-        [cmd] + args,
+        [cmd, *args],
         input=prompt,
         text=True,
         encoding="utf-8",

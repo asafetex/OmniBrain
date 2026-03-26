@@ -8,38 +8,16 @@ import datetime as dt
 import json
 from pathlib import Path
 
+try:
+    from tools.utils import detect_intent, load_json
+except ModuleNotFoundError:
+    from utils import detect_intent, load_json
+
 
 def load_policy(path: Path) -> dict:
     if not path.exists():
         raise FileNotFoundError(f"Routing config not found: {path}")
-    return json.loads(path.read_text(encoding="utf-8"))
-
-
-def detect_intent(task: str, intents: dict, explicit_intent: str) -> tuple[str, dict]:
-    if explicit_intent:
-        selected = intents.get(explicit_intent)
-        if selected is None:
-            raise ValueError(f"Intent not found in policy: {explicit_intent}")
-        return explicit_intent, selected
-
-    text = task.lower()
-    best_name = ""
-    best_score = 0
-    best_payload: dict = {}
-    for name, payload in intents.items():
-        keywords = payload.get("keywords", [])
-        score = 0
-        for kw in keywords:
-            if str(kw).lower() in text:
-                score += 1
-        if score > best_score:
-            best_score = score
-            best_name = name
-            best_payload = payload
-
-    if best_name:
-        return best_name, best_payload
-    return "generic", {}
+    return load_json(path)
 
 
 def to_markdown(route: dict) -> str:
