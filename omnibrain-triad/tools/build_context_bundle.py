@@ -5,22 +5,20 @@ from __future__ import annotations
 
 import argparse
 import datetime as dt
+import sys
 from pathlib import Path
 
-try:
-    from tools.utils import (
-        detect_intent,
-        load_json,
-        markdown_bullets,
-        parse_csv,
-        run_git,
-    )
-except ModuleNotFoundError:
-    from utils import (
+_tools_dir = Path(__file__).resolve().parent
+if str(_tools_dir) not in sys.path:
+    sys.path.insert(0, str(_tools_dir))
+
+from utils import (
     detect_intent,
+    get_repo_root,
     load_json,
     markdown_bullets,
     parse_csv,
+    resolve_config_path,
     run_git,
 )
 
@@ -134,9 +132,7 @@ def main() -> int:
         if not cfg_path.is_absolute():
             cfg_path = (repo_root / cfg_path).resolve()
         policy = load_json(cfg_path)
-        detected_intent, detected_payload = detect_intent(
-            args.task, policy.get("intents", {}), intent_value
-        )
+        detected_intent, detected_payload = detect_intent(args.task, policy.get("intents", {}), intent_value)
         intent_value = detected_intent
         if not graph_links:
             graph_links = list(detected_payload.get("graph_nodes", []))

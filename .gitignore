@@ -1,10 +1,54 @@
-﻿# Local runtime artifacts
-omnibrain-triad/tmp/
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Caches
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Logs
+*.log
+
+# OS
+Thumbs.db
+.DS_Store
+
+# OmniBrain TRIAD - runtime config (personal paths, secrets)
 omnibrain-triad/tools/config.json
+OmniBrain-remote/omnibrain-triad/tools/config.json
 
 # ByteRover local context
 .brv/
+omnibrain-triad/.brv/
 
-# Python cache artifacts
-__pycache__/
-*.pyc
+# Claude Code
+.claude/
+
+# Runtime artifacts
+omnibrain-triad/tmp/
+sandbox-l3-e2e/tmp/
+
+# OmniBrain-remote (deploy copy, not canonical source)
+OmniBrain-remote/
+
+# Nested git repos / backups
+sandbox-l3-e2e/.git-backup/
+
+# Bundle files
+*.bundle

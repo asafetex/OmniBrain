@@ -5,12 +5,7 @@ from __future__ import annotations
 import subprocess
 from pathlib import Path
 
-from tools.run_gate import (
-    AuditorResult,
-    decide,
-    infer_verdict_from_cli_text,
-    parse_verdict,
-)
+import pytest
 
 
 class TestRunGate:
@@ -78,6 +73,8 @@ class TestRunGate:
 
 class TestDecide:
     def test_l3_reject_if_any_reject(self) -> None:
+        from tools.run_gate import decide, AuditorResult
+
         results = {
             "codex": AuditorResult("codex", True, "completed", "REJECT", "cli", "", "", "", "", ""),
             "gemini": AuditorResult("gemini", True, "completed", "APPROVE", "cli", "", "", "", "", ""),
@@ -85,6 +82,8 @@ class TestDecide:
         assert decide("L3", results) == "REJECT"
 
     def test_l3_approve_if_both_approve(self) -> None:
+        from tools.run_gate import decide, AuditorResult
+
         results = {
             "codex": AuditorResult("codex", True, "completed", "APPROVE", "cli", "", "", "", "", ""),
             "gemini": AuditorResult("gemini", True, "completed", "APPROVE", "cli", "", "", "", "", ""),
@@ -92,6 +91,8 @@ class TestDecide:
         assert decide("L3", results) == "APPROVE"
 
     def test_l3_conflict_on_mixed(self) -> None:
+        from tools.run_gate import decide, AuditorResult
+
         results = {
             "codex": AuditorResult("codex", True, "completed", "UNKNOWN", "cli", "", "", "", "", ""),
             "gemini": AuditorResult("gemini", True, "completed", "APPROVE", "cli", "", "", "", "", ""),
@@ -99,41 +100,61 @@ class TestDecide:
         assert decide("L3", results) == "CONFLICT"
 
     def test_l2_reject_on_any_reject(self) -> None:
+        from tools.run_gate import decide, AuditorResult
+
         results = {
             "codex": AuditorResult("codex", True, "completed", "REJECT", "cli", "", "", "", "", ""),
         }
         assert decide("L2", results) == "REJECT"
 
     def test_l2_needs_human_on_unknown(self) -> None:
+        from tools.run_gate import decide, AuditorResult
+
         results = {
             "codex": AuditorResult("codex", True, "completed", "UNKNOWN", "cli", "", "", "", "", ""),
         }
         assert decide("L2", results) == "NEEDS_HUMAN"
 
     def test_l1_not_required(self) -> None:
+        from tools.run_gate import decide
+
         assert decide("L1", {}) == "NOT_REQUIRED"
 
 
 class TestParseVerdict:
     def test_parse_verdict_approve(self) -> None:
+        from tools.run_gate import parse_verdict
+
         assert parse_verdict("Some text\nVERDICT: APPROVE\n") == "APPROVE"
 
     def test_parse_verdict_reject(self) -> None:
+        from tools.run_gate import parse_verdict
+
         assert parse_verdict("VERDICT: REJECT") == "REJECT"
 
     def test_parse_verdict_unknown(self) -> None:
+        from tools.run_gate import parse_verdict
+
         assert parse_verdict("No verdict here") == "UNKNOWN"
 
     def test_parse_verdict_case_insensitive(self) -> None:
+        from tools.run_gate import parse_verdict
+
         assert parse_verdict("verdict: approve") == "APPROVE"
 
 
 class TestInferVerdict:
     def test_infer_reject_from_p0(self) -> None:
+        from tools.run_gate import infer_verdict_from_cli_text
+
         assert infer_verdict_from_cli_text("This has a [P0] blocker") == "REJECT"
 
     def test_infer_approve_from_no_blocking(self) -> None:
+        from tools.run_gate import infer_verdict_from_cli_text
+
         assert infer_verdict_from_cli_text("no blocking issues found") == "APPROVE"
 
     def test_infer_reject_from_insufficient(self) -> None:
+        from tools.run_gate import infer_verdict_from_cli_text
+
         assert infer_verdict_from_cli_text("insufficient evidence") == "REJECT"

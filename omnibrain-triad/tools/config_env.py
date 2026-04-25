@@ -5,14 +5,12 @@ Environment variables take precedence over config.json values.
 
 from __future__ import annotations
 
+import json
 import os
 from pathlib import Path
 from typing import Any
 
-try:
-    from tools.utils import load_json
-except ModuleNotFoundError:
-    from utils import load_json
+from utils import load_json
 
 
 DEFAULT_TIMEOUT = int(os.environ.get("TRIAD_TIMEOUT_SECONDS", "120"))

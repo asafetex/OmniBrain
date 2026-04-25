@@ -6,12 +6,14 @@ from __future__ import annotations
 import argparse
 import datetime as dt
 import re
+import sys
 from pathlib import Path
 
-try:
-    from tools.utils import run_git
-except ModuleNotFoundError:
-    from utils import run_git
+_tools_dir = Path(__file__).resolve().parent
+if str(_tools_dir) not in sys.path:
+    sys.path.insert(0, str(_tools_dir))
+
+from utils import get_repo_root, run_git
 
 
 def choose_gate_result(gate_dir: Path, change_id: str) -> Path:

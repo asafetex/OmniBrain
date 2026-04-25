@@ -7,8 +7,15 @@ import argparse
 import json
 import shutil
 import subprocess
+import sys
 from datetime import datetime
 from pathlib import Path
+
+_tools_dir = Path(__file__).resolve().parent
+if str(_tools_dir) not in sys.path:
+    sys.path.insert(0, str(_tools_dir))
+
+from utils import parse_csv
 
 VALID_TYPES = {"PLAN", "REVIEW", "LESSON", "WIN", "DECISION"}
 
@@ -28,10 +35,6 @@ def load_config(tools_dir: Path) -> dict:
     if cfg.exists():
         return json.loads(cfg.read_text(encoding="utf-8"))
     return json.loads((tools_dir / "config.example.json").read_text(encoding="utf-8"))
-
-
-def parse_csv(raw: str) -> list[str]:
-    return [x.strip() for x in raw.split(",") if x.strip()]
 
 
 def compose_memory_doc(mem_id: str, mem_type: str, project: str, topic: str, tags: list[str], refs: list[str], body: str) -> str:
@@ -66,7 +69,7 @@ def try_byterover(config: dict, payload: str) -> tuple[bool, str]:
 
     try:
         proc = subprocess.run(
-            [cmd, *args],
+            [cmd] + args,
             input=payload,
             text=True,
             capture_output=True,

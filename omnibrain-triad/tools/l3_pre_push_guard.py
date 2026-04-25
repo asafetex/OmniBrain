@@ -5,11 +5,14 @@ from __future__ import annotations
 
 import argparse
 import re
+import sys
 from pathlib import Path
+
 
 CHANGE_ID_RE = re.compile(r"^- Change-ID:\s*(.+)$", re.MULTILINE)
 LEVEL_RE = re.compile(r"^- Level:\s*(L1|L2|L3)$", re.MULTILINE)
 DECISION_RE = re.compile(r"^- Final Decision:\s*([A-Z_]+)$", re.MULTILINE)
+SAFE_ID_RE = re.compile(r"^[A-Za-z0-9._-]+$")
 
 
 def parse_change_package(path: Path) -> tuple[str, str]:
@@ -84,6 +87,9 @@ def main() -> int:
     if not change_id:
         print(f"[FAIL] could not parse Change-ID from {latest_cp}")
         return 1
+    if not SAFE_ID_RE.match(change_id):
+        print(f"[FAIL] Change-ID contains unsafe characters: {change_id!r}")
+        return 1
 
     print(f"[INFO] latest Change Package: {latest_cp.name} (Level={level}, Change-ID={change_id})")
     if level != "L3":
@@ -109,4 +115,7 @@ def main() -> int:
 
 
 if __name__ == "__main__":
+    if sys.version_info < (3, 10):
+        print("Python 3.10+ required.")
+        raise SystemExit(1)
     raise SystemExit(main())

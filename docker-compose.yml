@@ -20,3 +20,12 @@ services:
     volumes:
       - ./omnibrain-triad:/app:ro
     command: ruff check tools/ tests/ bootstrap.py
+
+  preflight:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    working_dir: /app
+    volumes:
+      - ./omnibrain-triad:/app
+    command: python tools/preflight_check.py --repo .

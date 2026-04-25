@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import re
 import shutil
 import subprocess
@@ -13,12 +14,15 @@ from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
 
-try:
-    from tools.config_env import load_config
-except ModuleNotFoundError:
-    from config_env import load_config
+_tools_dir = Path(__file__).resolve().parent
+if str(_tools_dir) not in sys.path:
+    sys.path.insert(0, str(_tools_dir))
+
+from config_env import load_config
+from utils import load_json
 
 
+SAFE_ID_RE = re.compile(r"^[A-Za-z0-9._-]+$")
 VERDICT_RE = re.compile(r"^\s*VERDICT\s*:\s*(APPROVE|REJECT)\s*$", re.IGNORECASE | re.MULTILINE)
 BLOCKER_SIGNAL_RE = re.compile(r"\[(P0|P1|P2)\]", re.IGNORECASE)
 APPROVE_SIGNAL_RE = re.compile(
@@ -52,12 +56,22 @@ class AuditorResult:
     manual_response_path: str
 
 
+def _validate_safe_id(value: str, label: str) -> str:
+    if not SAFE_ID_RE.match(value):
+        raise ValueError(f"Invalid {label}: contains unsafe characters: {value!r}")
+    return value
+
+
 def parse_change_metadata(change_package: str) -> tuple[str, str, str]:
     change_id_match = re.search(r"^- Change-ID:\s*(.+)$", change_package, re.MULTILINE)
     level_match = re.search(r"^- Level:\s*(L1|L2|L3)$", change_package, re.MULTILINE)
     repo_match = re.search(r"^- Repo:\s*(.+)$", change_package, re.MULTILINE)
-    change_id = change_id_match.group(1).strip() if change_id_match else f"CHG-UNKNOWN-{datetime.now():%Y%m%d-%H%M%S}"
-    level = level_match.group(1).strip() if level_match else "L3"
+    if not change_id_match:
+        raise ValueError("Change Package is missing 'Change-ID' field. Cannot proceed.")
+    if not level_match:
+        raise ValueError("Change Package is missing 'Level' field (expected L1, L2, or L3). Cannot proceed.")
+    change_id = _validate_safe_id(change_id_match.group(1).strip(), "Change-ID")
+    level = level_match.group(1).strip()
     repo = repo_match.group(1).strip() if repo_match else ""
     return change_id, level, repo
 
@@ -94,7 +108,7 @@ def build_prompt(template_path: Path, change_package: str) -> str:
 
 def run_cli(cmd: str, args: list[str], prompt: str, timeout_seconds: int, cwd: Path | None) -> tuple[int, str, str]:
     proc = subprocess.run(
-        [cmd, *args],
+        [cmd] + args,
         input=prompt,
         text=True,
         encoding="utf-8",
@@ -246,11 +260,16 @@ def decide(level: str, results: dict[str, AuditorResult]) -> str:
         verdicts = [r.verdict for r in results.values() if r.verdict in {"APPROVE", "REJECT"}]
         if "REJECT" in verdicts:
             return "REJECT"
-        if verdicts and all(v == "APPROVE" for v in verdicts):
-            return "APPROVE"
         return "NEEDS_HUMAN"
 
     return "NOT_REQUIRED"
+
+
+def _sanitize_cli_output(text: str) -> str:
+    """Remove ANSI escape sequences and null bytes from CLI output."""
+    text = re.sub(r"\x1b\[[0-9;]*[a-zA-Z]", "", text)
+    text = text.replace("\x00", "")
+    return text
 
 
 def result_to_markdown(change_id: str, level: str, decision: str, results: list[AuditorResult]) -> str:
@@ -278,12 +297,12 @@ def result_to_markdown(change_id: str, level: str, decision: str, results: list[
                 "",
                 "### Stdout",
                 "```text",
-                r.stdout or "(empty)",
+                _sanitize_cli_output(r.stdout) or "(empty)",
                 "```",
                 "",
                 "### Stderr",
                 "```text",
-                r.stderr or "(empty)",
+                _sanitize_cli_output(r.stderr) or "(empty)",
                 "```",
                 "",
             ]

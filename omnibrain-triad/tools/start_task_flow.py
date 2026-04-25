@@ -11,23 +11,21 @@ from __future__ import annotations
 
 import argparse
 import datetime as dt
+import subprocess
 import sys
 from pathlib import Path
 
-try:
-    from tools.utils import (
-        detect_intent,
-        find_saved_path,
-        load_json,
-        parse_csv,
-        run_command,
-    )
-except ModuleNotFoundError:
-    from utils import (
+_tools_dir = Path(__file__).resolve().parent
+if str(_tools_dir) not in sys.path:
+    sys.path.insert(0, str(_tools_dir))
+
+from utils import (
     detect_intent,
     find_saved_path,
+    get_repo_root,
     load_json,
     parse_csv,
+    resolve_config_path,
     run_command,
 )
 

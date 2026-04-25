@@ -34,7 +34,7 @@ def markdown_bullets(items: list[str], empty_label: str) -> str:
 
 
 def run_git(repo: Path, args: list[str]) -> tuple[bool, str]:
-    cmd = ["git", "-C", str(repo), *args]
+    cmd = ["git", "-C", str(repo)] + args
     proc = subprocess.run(cmd, text=True, capture_output=True)
     if proc.returncode != 0:
         message = proc.stderr.strip() or proc.stdout.strip() or f"git failed: {' '.join(cmd)}"

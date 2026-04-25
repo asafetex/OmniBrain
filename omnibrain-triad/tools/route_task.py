@@ -6,12 +6,15 @@ from __future__ import annotations
 import argparse
 import datetime as dt
 import json
+import shlex
+import sys
 from pathlib import Path
 
-try:
-    from tools.utils import detect_intent, load_json
-except ModuleNotFoundError:
-    from utils import detect_intent, load_json
+_tools_dir = Path(__file__).resolve().parent
+if str(_tools_dir) not in sys.path:
+    sys.path.insert(0, str(_tools_dir))
+
+from utils import detect_intent, get_repo_root, load_json, resolve_config_path
 
 
 def load_policy(path: Path) -> dict:
@@ -30,22 +33,23 @@ def to_markdown(route: dict) -> str:
     reviewers = route.get("reviewers", [])
     reviewers_md = ", ".join(reviewers) if reviewers else "(none)"
 
+    q = shlex.quote
     cmd_graph_links = ",".join(graph_nodes)
     if cmd_graph_links:
         bundle_cmd = (
-            f'python tools/build_context_bundle.py --repo {route["repo"]} '
-            f'--task "{route["task"]}" --level {route["level"]} '
-            f'--intent {route["intent"]} --graph-links "{cmd_graph_links}"'
+            f'python tools/build_context_bundle.py --repo {q(route["repo"])} '
+            f'--task {q(route["task"])} --level {q(route["level"])} '
+            f'--intent {q(route["intent"])} --graph-links {q(cmd_graph_links)}'
         )
     else:
         bundle_cmd = (
-            f'python tools/build_context_bundle.py --repo {route["repo"]} '
-            f'--task "{route["task"]}" --level {route["level"]} --intent {route["intent"]}'
+            f'python tools/build_context_bundle.py --repo {q(route["repo"])} '
+            f'--task {q(route["task"])} --level {q(route["level"])} --intent {q(route["intent"])}'
         )
 
     change_cmd = (
-        f'python tools/make_change_package.py --repo {route["repo"]} '
-        f'--level {route["level"]} --goal "{route["task"]}"'
+        f'python tools/make_change_package.py --repo {q(route["repo"])} '
+        f'--level {q(route["level"])} --goal {q(route["task"])}'
     )
     gate_cmd = 'python tools/run_gate.py --change-package tmp/change-packages/<Change-ID>.md'
 

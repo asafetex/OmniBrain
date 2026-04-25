@@ -10,12 +10,11 @@ dependencies = []
 
 [project.optional-dependencies]
 dev = [
-    "pytest>=8.0.0",
+    "pytest>=9.0.0",
     "ruff>=0.8.0",
 ]
 
 [project.scripts]
-triad-bootstrap = "bootstrap:main"
 triad-preflight = "tools.preflight_check:main"
 triad-route = "tools.route_task:main"
 triad-bundle = "tools.build_context_bundle:main"
@@ -39,6 +38,4 @@ python_classes = ["Test*"]
 python_functions = ["test_*"]
 addopts = "-q"
 
-[tool.ruff]
-line-length = 88
-target-version = "py310"
+# Ruff configuration lives in ruff.toml (single source of truth)

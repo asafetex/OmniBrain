@@ -6,13 +6,15 @@ from __future__ import annotations
 import argparse
 import datetime as dt
 import re
+import sys
 from collections import Counter
 from pathlib import Path
 
-try:
-    from tools.utils import get_repo_root
-except ModuleNotFoundError:
-    from utils import get_repo_root
+_tools_dir = Path(__file__).resolve().parent
+if str(_tools_dir) not in sys.path:
+    sys.path.insert(0, str(_tools_dir))
+
+from utils import get_repo_root
 
 
 TYPE_RE = re.compile(r"^- Type:\s*([A-Z]+)\s*$", re.MULTILINE)

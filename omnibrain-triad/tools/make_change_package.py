@@ -8,10 +8,11 @@ import datetime as dt
 import sys
 from pathlib import Path
 
-try:
-    from tools.utils import run_git_strict
-except ModuleNotFoundError:
-    from utils import run_git_strict
+_tools_dir = Path(__file__).resolve().parent
+if str(_tools_dir) not in sys.path:
+    sys.path.insert(0, str(_tools_dir))
+
+from utils import run_git_strict
 
 
 def comma_to_bullets(raw: str | None, empty_label: str) -> str:
@@ -30,10 +31,11 @@ def load_template(template_path: Path) -> str:
 
 
 def fill_template(template: str, mapping: dict[str, str]) -> str:
-    out = template
-    for key, value in mapping.items():
-        out = out.replace("{{" + key + "}}", value)
-    return out
+    import re
+    def _replacer(match: re.Match) -> str:
+        key = match.group(1)
+        return mapping.get(key, match.group(0))
+    return re.sub(r"\{\{([A-Z_]+)\}\}", _replacer, template)
 
 
 def main() -> int:
@@ -108,3 +110,4 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+
