@@ -22,6 +22,7 @@ _tools_dir = Path(__file__).resolve().parent
 if str(_tools_dir) not in sys.path:
     sys.path.insert(0, str(_tools_dir))
 
+from telemetry import record_run, tool_name_from_file
 from utils import print_utf8
 
 TOKEN_RE = re.compile(r"[A-Za-z0-9_]+", re.UNICODE)
@@ -167,4 +168,5 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    with record_run(tool_name_from_file(__file__)):
+        raise SystemExit(main())

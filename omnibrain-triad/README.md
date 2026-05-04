@@ -113,10 +113,13 @@ Tudo abaixo foi exercitado em smoke tests adversariais e tem evidencia em logs/o
 | `triad_stats.py` | OK | Janelas de 1d e 30d, contagem por type/project |
 | `recover_session.py` | OK | Snapshot + diff + recovery prompt |
 | `promote_to_obsidian.py` | OK | --list, --target relativo, --target com prefixo (auto-corrigido) |
-| `bootstrap.py` | OK | Cria 80 arquivos em projeto novo; preflight passa |
+| `bootstrap.py` | OK | Cria 85 arquivos em projeto novo; preflight passa |
 | `search_memory.py` | OK | TF-IDF stdlib, ranqueia 11 memorias por relevancia (top-K configuravel, threshold de score) |
+| `inbox_curator.py` | OK | Detecta stale (>30d), duplicates (cosine >=0.85), promote candidates; dry-run + --apply |
+| `telemetry.py` | OK | Cada tool emite JSONL com ts, exit_code, duration_ms; argv sensiveis sao redacted |
 | Hook audit log | OK | Cada execucao registrada em `.triad-push-audit.log` |
-| Templates por dominio | OK | Auto-detecta auth/billing/data_pipeline e usa checklist especializado |
+| Templates Codex por dominio | OK | Auto-detecta auth/billing/data_pipeline e usa checklist especializado (codex) |
+| Templates Gemini por dominio | OK | Mesmo set para Gemini, foco sistemico (contratos, regressoes, SLA) |
 | Race condition | OK | 5 instancias paralelas no mesmo segundo geraram 5 IDs unicos (UUID) |
 | ByteRover CLI ativo | OK (mock) | Caminho positivo validado: payload entregue, memory_id retornado |
 | PreGate (DeepSeek+CodeRabbit) | OK (mock) | L2 com TODO -> REJECT propagado; L3 com 4 auditores -> APPROVE |
