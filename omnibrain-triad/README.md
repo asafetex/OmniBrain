@@ -113,12 +113,16 @@ Tudo abaixo foi exercitado em smoke tests adversariais e tem evidencia em logs/o
 | `triad_stats.py` | OK | Janelas de 1d e 30d, contagem por type/project |
 | `recover_session.py` | OK | Snapshot + diff + recovery prompt |
 | `promote_to_obsidian.py` | OK | --list, --target relativo, --target com prefixo (auto-corrigido) |
-| `bootstrap.py` | OK | Cria 76 arquivos em projeto novo; preflight passa |
+| `bootstrap.py` | OK | Cria 80 arquivos em projeto novo; preflight passa |
+| `search_memory.py` | OK | TF-IDF stdlib, ranqueia 11 memorias por relevancia (top-K configuravel, threshold de score) |
 | Hook audit log | OK | Cada execucao registrada em `.triad-push-audit.log` |
 | Templates por dominio | OK | Auto-detecta auth/billing/data_pipeline e usa checklist especializado |
 | Race condition | OK | 5 instancias paralelas no mesmo segundo geraram 5 IDs unicos (UUID) |
+| ByteRover CLI ativo | OK (mock) | Caminho positivo validado: payload entregue, memory_id retornado |
+| PreGate (DeepSeek+CodeRabbit) | OK (mock) | L2 com TODO -> REJECT propagado; L3 com 4 auditores -> APPROVE |
+| Multi-repo paralelo | OK | 2 fluxos start_task_flow simultaneos, IDs isolados, sem interferencia |
 
 **Limites conhecidos:**
 - `--no-verify` no `git push` ainda bypassa o hook localmente (use GitHub branch protection para enforcement real)
-- ByteRover CLI 2.x ativo nao foi validado contra binario real (so fallback INBOX)
-- DeepSeek/CodeRabbit PreGate sao opcionais e nao foram testados em ciclo real
+- ByteRover/DeepSeek/CodeRabbit foram validados via mocks executaveis (caminho de codigo do TRIAD provado); validacao contra binarios reais depende dos fornecedores
+- Busca semantica usa TF-IDF stdlib (escala bem ate ~1000 memorias); para >10k memorias considere embeddings reais (FAISS/Chroma)

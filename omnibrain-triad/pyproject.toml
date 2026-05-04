@@ -23,6 +23,7 @@ triad-gate = "tools.run_gate:main"
 triad-recover = "tools.recover_session:main"
 triad-flow = "tools.start_task_flow:main"
 triad-stats = "tools.triad_stats:main"
+triad-search = "tools.search_memory:main"
 
 [build-system]
 requires = ["hatchling"]
