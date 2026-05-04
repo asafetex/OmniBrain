@@ -6,13 +6,14 @@ from __future__ import annotations
 import argparse
 import datetime as dt
 import sys
+import uuid
 from pathlib import Path
 
 _tools_dir = Path(__file__).resolve().parent
 if str(_tools_dir) not in sys.path:
     sys.path.insert(0, str(_tools_dir))
 
-from utils import run_git_strict
+from utils import print_utf8, run_git_strict
 
 
 def comma_to_bullets(raw: str | None, empty_label: str) -> str:
@@ -71,12 +72,22 @@ def main() -> int:
     try:
         git_diff = run_git_strict(repo, diff_args).strip()
         files = run_git_strict(repo, name_only_args).strip()
+        untracked = run_git_strict(repo, ["ls-files", "--others", "--exclude-standard"]).strip()
     except RuntimeError as exc:
         print(str(exc), file=sys.stderr)
         return 1
 
+    if untracked and not args.staged:
+        print(
+            f"WARNING: {len(untracked.splitlines())} untracked file(s) detected and NOT included in Change Package.\n"
+            f"  Untracked: {', '.join(untracked.splitlines()[:5])}{'...' if len(untracked.splitlines()) > 5 else ''}\n"
+            f"  Run 'git add' first or use --staged to include only staged changes.",
+            file=sys.stderr,
+        )
+
     timestamp = dt.datetime.now().strftime("%Y%m%d-%H%M%S")
-    change_id = f"CHG-{timestamp}"
+    short_uid = uuid.uuid4().hex[:6]
+    change_id = f"CHG-{timestamp}-{short_uid}"
     files_impacted = "\n".join(f"- {line}" for line in files.splitlines()) if files else "- (sem arquivos detectados)"
     graph_links = comma_to_bullets(args.graph_links, "sem links informados")
     memory_refs = comma_to_bullets(args.memory_refs, "sem referencias informadas")
@@ -103,8 +114,8 @@ def main() -> int:
     output_path = output_dir / f"{change_id}.md"
     output_path.write_text(content, encoding="utf-8")
 
-    print(content)
-    print(f"\nSaved: {output_path}")
+    print_utf8(content)
+    print_utf8(f"\nSaved: {output_path}")
     return 0
 
 

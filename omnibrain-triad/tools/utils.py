@@ -6,8 +6,20 @@ import json
 import os
 import shutil
 import subprocess
+import sys
 from pathlib import Path
 from typing import Any
+
+
+def print_utf8(text: str) -> None:
+    """Print text encoded as UTF-8, robust against Windows cp1252 stdout."""
+    try:
+        sys.stdout.buffer.write(text.encode("utf-8", errors="replace"))
+        if not text.endswith("\n"):
+            sys.stdout.buffer.write(b"\n")
+    except (AttributeError, OSError):
+        # Fallback if buffer is not available (rare)
+        print(text.encode("utf-8", errors="replace").decode("utf-8", errors="replace"))
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -35,11 +47,15 @@ def markdown_bullets(items: list[str], empty_label: str) -> str:
 
 def run_git(repo: Path, args: list[str]) -> tuple[bool, str]:
     cmd = ["git", "-C", str(repo), *args]
-    proc = subprocess.run(cmd, text=True, capture_output=True)
+    proc = subprocess.run(
+        cmd, text=True, capture_output=True, encoding="utf-8", errors="replace"
+    )
+    stdout = proc.stdout or ""
+    stderr = proc.stderr or ""
     if proc.returncode != 0:
-        message = proc.stderr.strip() or proc.stdout.strip() or f"git failed: {' '.join(cmd)}"
+        message = stderr.strip() or stdout.strip() or f"git failed: {' '.join(cmd)}"
         return False, message
-    return True, proc.stdout.strip()
+    return True, stdout.strip()
 
 
 def run_git_strict(repo: Path, args: list[str]) -> str:
@@ -50,8 +66,11 @@ def run_git_strict(repo: Path, args: list[str]) -> str:
 
 
 def run_command(cmd: list[str], cwd: Path) -> tuple[int, str, str]:
-    proc = subprocess.run(cmd, text=True, capture_output=True, cwd=str(cwd))
-    return proc.returncode, proc.stdout, proc.stderr
+    proc = subprocess.run(
+        cmd, text=True, capture_output=True, cwd=str(cwd),
+        encoding="utf-8", errors="replace",
+    )
+    return proc.returncode, proc.stdout or "", proc.stderr or ""
 
 
 def command_exists(cmd: str) -> bool:

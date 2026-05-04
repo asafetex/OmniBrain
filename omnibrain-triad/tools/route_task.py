@@ -14,7 +14,7 @@ _tools_dir = Path(__file__).resolve().parent
 if str(_tools_dir) not in sys.path:
     sys.path.insert(0, str(_tools_dir))
 
-from utils import detect_intent, load_json
+from utils import detect_intent, load_json, print_utf8
 
 
 def load_policy(path: Path) -> dict:
@@ -77,7 +77,7 @@ def to_markdown(route: dict) -> str:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Route task intent and policy for OmniBrain TRIAD.")
-    parser.add_argument("--task", required=True, help="Task description.")
+    parser.add_argument("--task", required=True, help="Task description (non-empty).")
     parser.add_argument("--level", default="L2", choices=["L1", "L2", "L3"], help="Task level.")
     parser.add_argument("--intent", default="", help="Explicit intent id from routing policy.")
     parser.add_argument("--repo", default=".", help="Target repository path for command suggestions.")
@@ -85,6 +85,10 @@ def main() -> int:
     parser.add_argument("--format", default="markdown", choices=["markdown", "json"], help="Output format.")
     parser.add_argument("--output", default="", help="Optional output file path.")
     args = parser.parse_args()
+
+    if not args.task.strip():
+        print("Error: --task cannot be empty.", file=sys.stderr)
+        return 2
 
     tools_dir = Path(__file__).resolve().parent
     repo_root = tools_dir.parent
@@ -129,8 +133,8 @@ def main() -> int:
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(rendered, encoding="utf-8")
 
-    print(rendered)
-    print(f"Saved: {out_path}")
+    print_utf8(rendered)
+    print_utf8(f"Saved: {out_path}")
     return 0
 
 

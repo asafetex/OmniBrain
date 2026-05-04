@@ -94,7 +94,13 @@ def main() -> int:
     if not src.exists():
         raise FileNotFoundError(f"Arquivo de origem nao encontrado: {src}")
 
-    target_dir = (graph_root / args.target).resolve()
+    target_arg = args.target.replace("\\", "/").strip("/")
+    # If user passed full path including 'context-hub/02_GRAPH/...', strip the prefix
+    for prefix in ("context-hub/02_GRAPH/", "context-hub/02_graph/"):
+        if target_arg.lower().startswith(prefix.lower()):
+            target_arg = target_arg[len(prefix):]
+            break
+    target_dir = (graph_root / target_arg).resolve()
     if graph_root not in target_dir.parents and target_dir != graph_root:
         raise ValueError("Target deve ficar dentro de context-hub/02_GRAPH.")
     target_dir.mkdir(parents=True, exist_ok=True)

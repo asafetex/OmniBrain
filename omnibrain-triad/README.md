@@ -95,3 +95,30 @@ Veja a arvore completa em `docs/00_overview.md`.
 - PreGate DeepSeek/CodeRabbit e opcional e nunca substitui o Gate L3.
 - Sem `git diff`, sem revisao.
 - Memoria bruta fica em ByteRover ou INBOX; Graph recebe so conhecimento curado.
+
+## Empirically validated (smoke-tested)
+
+Tudo abaixo foi exercitado em smoke tests adversariais e tem evidencia em logs/outputs reais:
+
+| Feature | Status | Evidencia |
+|---|---|---|
+| `preflight_check.py` | OK | Detecta CLI faltante (FAIL=1), templates OK, tmp writable |
+| `route_task.py` | OK | 5 inputs adversariais (normal, keyword colidida, command injection, vazio rejeitado, unicode/emoji) |
+| `make_change_package.py` | OK | Diff vazio, 1MB, 5MB (275ms), unicode/emoji, untracked warning, UUID anti-collision |
+| `build_context_bundle.py` | OK | Auto-route + nos do Graph + memoria recente |
+| `start_task_flow.py` | OK | Pipeline E2E: route + bundle + change package |
+| `run_gate.py` | OK | 5 cenarios: APPROVE/APPROVE -> APPROVE; APPROVE/REJECT -> REJECT; REJECT/REJECT -> REJECT; UNKNOWN/UNKNOWN -> CONFLICT; APPROVE/UNKNOWN -> CONFLICT. Path traversal -> ValueError + exit 2 |
+| `l3_pre_push_guard.py` | OK | APPROVE permite (exit 0), REJECT bloqueia (exit 1), missing gate bloqueia (exit 1) |
+| `record_to_byterover.py` | OK | Fallback INBOX testado (--text e --file) |
+| `triad_stats.py` | OK | Janelas de 1d e 30d, contagem por type/project |
+| `recover_session.py` | OK | Snapshot + diff + recovery prompt |
+| `promote_to_obsidian.py` | OK | --list, --target relativo, --target com prefixo (auto-corrigido) |
+| `bootstrap.py` | OK | Cria 76 arquivos em projeto novo; preflight passa |
+| Hook audit log | OK | Cada execucao registrada em `.triad-push-audit.log` |
+| Templates por dominio | OK | Auto-detecta auth/billing/data_pipeline e usa checklist especializado |
+| Race condition | OK | 5 instancias paralelas no mesmo segundo geraram 5 IDs unicos (UUID) |
+
+**Limites conhecidos:**
+- `--no-verify` no `git push` ainda bypassa o hook localmente (use GitHub branch protection para enforcement real)
+- ByteRover CLI 2.x ativo nao foi validado contra binario real (so fallback INBOX)
+- DeepSeek/CodeRabbit PreGate sao opcionais e nao foram testados em ciclo real

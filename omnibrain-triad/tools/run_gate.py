@@ -103,6 +103,36 @@ def build_prompt(template_path: Path, change_package: str) -> str:
     return template.replace("{{CHANGE_PACKAGE}}", change_package)
 
 
+DOMAIN_KEYWORDS = {
+    "auth": ["auth", "oauth", "jwt", "login", "password", "session", "mfa", "credential", "token", "rbac"],
+    "billing": ["billing", "payment", "stripe", "invoice", "subscription", "checkout", "refund", "tax", "currency", "charge"],
+    "data_pipeline": ["pipeline", "etl", "spark", "delta", "incremental", "watermark", "join explode", "shuffle", "partition", "broadcast", "merge"],
+}
+
+
+def detect_domain(change_package: str) -> str | None:
+    """Return domain key if change package matches well-known domain keywords."""
+    text = change_package.lower()
+    best_domain = None
+    best_score = 0
+    for domain, keywords in DOMAIN_KEYWORDS.items():
+        score = sum(1 for kw in keywords if kw in text)
+        if score > best_score:
+            best_score = score
+            best_domain = domain
+    return best_domain if best_score >= 2 else None
+
+
+def select_template(tools_dir: Path, auditor_name: str, change_package: str) -> Path:
+    """Choose domain-specific template if it exists and domain detected."""
+    domain = detect_domain(change_package)
+    if domain:
+        domain_template = tools_dir / "templates" / f"{auditor_name}_review_prompt_{domain}.md"
+        if domain_template.exists():
+            return domain_template
+    return tools_dir / "templates" / f"{auditor_name}_review_prompt.md"
+
+
 def run_cli(cmd: str, args: list[str], prompt: str, timeout_seconds: int, cwd: Path | None) -> tuple[int, str, str]:
     proc = subprocess.run(
         [cmd, *args],
@@ -129,7 +159,7 @@ def run_auditor(
     auditor_cfg = config.get("auditors", {}).get(auditor_name, {})
     defaults = config.get("defaults", {})
     timeout_seconds = int(auditor_cfg.get("timeout_seconds", defaults.get("timeout_seconds", 120)))
-    template_file = tools_dir / "templates" / f"{auditor_name}_review_prompt.md"
+    template_file = select_template(tools_dir, auditor_name, change_package)
     prompt = build_prompt(template_file, change_package)
 
     prompt_path = tmp_manual_dir / f"{auditor_name}_prompt.md"
@@ -331,7 +361,11 @@ def main() -> int:
     repo_root = tools_dir.parent
     config = load_config(tools_dir)
     change_package = change_path.read_text(encoding="utf-8")
-    change_id, level, repo_in_package = parse_change_metadata(change_package)
+    try:
+        change_id, level, repo_in_package = parse_change_metadata(change_package)
+    except ValueError as exc:
+        print(f"ERROR: invalid Change Package metadata: {exc}", file=sys.stderr)
+        return 2
 
     execution_cwd: Path | None = None
     if repo_in_package:
