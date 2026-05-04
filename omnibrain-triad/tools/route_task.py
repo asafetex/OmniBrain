@@ -14,7 +14,7 @@ _tools_dir = Path(__file__).resolve().parent
 if str(_tools_dir) not in sys.path:
     sys.path.insert(0, str(_tools_dir))
 
-from utils import detect_intent, get_repo_root, load_json, resolve_config_path
+from utils import detect_intent, load_json
 
 
 def load_policy(path: Path) -> dict:

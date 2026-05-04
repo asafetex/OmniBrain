@@ -4,7 +4,6 @@
 from __future__ import annotations
 
 import argparse
-import subprocess
 import sys
 from pathlib import Path
 
@@ -12,8 +11,8 @@ _tools_dir = Path(__file__).resolve().parent
 if str(_tools_dir) not in sys.path:
     sys.path.insert(0, str(_tools_dir))
 
-from utils import command_exists, get_repo_root, run_git
 from config_env import load_config
+from utils import command_exists, run_git
 
 
 def check_list_item(results: list[tuple[str, str, str]], status: str, name: str, detail: str) -> None:
@@ -148,7 +147,4 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    if sys.version_info < (3, 10):
-        print("Python 3.10+ required.")
-        raise SystemExit(1)
     raise SystemExit(main())

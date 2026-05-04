@@ -14,6 +14,7 @@ select = [
 ]
 ignore = [
     "E501",  # line too long (handled by formatter)
+    "E402",  # module level import not at top — intentional due to sys.path manipulation pattern
     "B008",  # do not perform function calls in argument defaults
     "C901",  # too complex
 ]

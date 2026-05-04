@@ -8,7 +8,7 @@
     "codex": {
       "enabled": false,
       "cmd": "codex",
-      "args": [],
+      "args": ["review", "-"],
       "timeout_seconds": 240,
       "input_mode": "stdin",
       "manual_copy_hint": "Abra o Codex CLI e cole o prompt salvo."
@@ -41,8 +41,8 @@
   "byterover": {
     "enabled": false,
     "cmd": "brv",
-    "args": [],
+    "args": ["curate"],
     "input_mode": "stdin",
-    "manual_copy_hint": "Se o CLI falhar, arquivo será salvo no INBOX."
+    "manual_copy_hint": "Se o CLI falhar, arquivo sera salvo no INBOX."
   }
 }

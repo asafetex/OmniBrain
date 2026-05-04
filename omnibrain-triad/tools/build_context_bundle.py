@@ -14,11 +14,9 @@ if str(_tools_dir) not in sys.path:
 
 from utils import (
     detect_intent,
-    get_repo_root,
     load_json,
     markdown_bullets,
     parse_csv,
-    resolve_config_path,
     run_git,
 )
 

@@ -19,7 +19,8 @@ def update_graph_index(graph_index: Path, new_rel_path: str) -> None:
     if not graph_index.exists():
         graph_index.write_text("# Skill Graph Index\n\n## Promoted Notes\n", encoding="utf-8")
     content = graph_index.read_text(encoding="utf-8")
-    marker = f"- [{Path(new_rel_path).stem}]({new_rel_path.replace('\\', '/')})"
+    forward_path = new_rel_path.replace("\\", "/")
+    marker = f"- [{Path(new_rel_path).stem}]({forward_path})"
     promoted_heading = "## Promoted Notes"
 
     lines = content.splitlines()

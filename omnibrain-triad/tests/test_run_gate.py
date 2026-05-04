@@ -5,8 +5,6 @@ from __future__ import annotations
 import subprocess
 from pathlib import Path
 
-import pytest
-
 
 class TestRunGate:
     def test_cli_args_parsing(self, python_exe: str, tools_dir: Path, subprocess_env: dict[str, str]) -> None:
@@ -73,7 +71,7 @@ class TestRunGate:
 
 class TestDecide:
     def test_l3_reject_if_any_reject(self) -> None:
-        from tools.run_gate import decide, AuditorResult
+        from tools.run_gate import AuditorResult, decide
 
         results = {
             "codex": AuditorResult("codex", True, "completed", "REJECT", "cli", "", "", "", "", ""),
@@ -82,7 +80,7 @@ class TestDecide:
         assert decide("L3", results) == "REJECT"
 
     def test_l3_approve_if_both_approve(self) -> None:
-        from tools.run_gate import decide, AuditorResult
+        from tools.run_gate import AuditorResult, decide
 
         results = {
             "codex": AuditorResult("codex", True, "completed", "APPROVE", "cli", "", "", "", "", ""),
@@ -91,7 +89,7 @@ class TestDecide:
         assert decide("L3", results) == "APPROVE"
 
     def test_l3_conflict_on_mixed(self) -> None:
-        from tools.run_gate import decide, AuditorResult
+        from tools.run_gate import AuditorResult, decide
 
         results = {
             "codex": AuditorResult("codex", True, "completed", "UNKNOWN", "cli", "", "", "", "", ""),
@@ -100,7 +98,7 @@ class TestDecide:
         assert decide("L3", results) == "CONFLICT"
 
     def test_l2_reject_on_any_reject(self) -> None:
-        from tools.run_gate import decide, AuditorResult
+        from tools.run_gate import AuditorResult, decide
 
         results = {
             "codex": AuditorResult("codex", True, "completed", "REJECT", "cli", "", "", "", "", ""),
@@ -108,7 +106,7 @@ class TestDecide:
         assert decide("L2", results) == "REJECT"
 
     def test_l2_needs_human_on_unknown(self) -> None:
-        from tools.run_gate import decide, AuditorResult
+        from tools.run_gate import AuditorResult, decide
 
         results = {
             "codex": AuditorResult("codex", True, "completed", "UNKNOWN", "cli", "", "", "", "", ""),

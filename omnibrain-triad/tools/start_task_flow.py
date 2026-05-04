@@ -11,7 +11,6 @@ from __future__ import annotations
 
 import argparse
 import datetime as dt
-import subprocess
 import sys
 from pathlib import Path
 
@@ -22,10 +21,8 @@ if str(_tools_dir) not in sys.path:
 from utils import (
     detect_intent,
     find_saved_path,
-    get_repo_root,
     load_json,
     parse_csv,
-    resolve_config_path,
     run_command,
 )
 

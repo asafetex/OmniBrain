@@ -40,6 +40,9 @@ omnibrain-triad/.brv/
 # Claude Code
 .claude/
 
+# AIOS workspace
+.aios/
+
 # Runtime artifacts
 omnibrain-triad/tmp/
 sandbox-l3-e2e/tmp/

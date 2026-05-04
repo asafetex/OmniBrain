@@ -7,7 +7,6 @@ import argparse
 import shutil
 from pathlib import Path
 
-
 FILES = [
     "README.md",
     "docs/00_overview.md",

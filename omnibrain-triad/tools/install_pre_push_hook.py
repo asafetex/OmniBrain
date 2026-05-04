@@ -4,15 +4,13 @@
 from __future__ import annotations
 
 import argparse
-import os
 import stat
 import subprocess
-import sys
 from pathlib import Path
 
 
 def run_git(repo: Path, args: list[str]) -> tuple[int, str, str]:
-    proc = subprocess.run(["git", "-C", str(repo)] + args, text=True, capture_output=True)
+    proc = subprocess.run(["git", "-C", str(repo), *args], text=True, capture_output=True)
     return proc.returncode, proc.stdout.strip(), proc.stderr.strip()
 
 
@@ -84,7 +82,4 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    if sys.version_info < (3, 10):
-        print("Python 3.10+ required.")
-        raise SystemExit(1)
     raise SystemExit(main())

@@ -5,13 +5,11 @@ Environment variables take precedence over config.json values.
 
 from __future__ import annotations
 
-import json
 import os
 from pathlib import Path
 from typing import Any
 
 from utils import load_json
-
 
 DEFAULT_TIMEOUT = int(os.environ.get("TRIAD_TIMEOUT_SECONDS", "120"))
 DEFAULT_ENCODING = os.environ.get("TRIAD_ENCODING", "utf-8")

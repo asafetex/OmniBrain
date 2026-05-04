@@ -5,8 +5,6 @@ from __future__ import annotations
 import subprocess
 from pathlib import Path
 
-import pytest
-
 
 class TestMakeChangePackage:
     def test_cli_args_parsing(

@@ -16,7 +16,6 @@ if str(_tools_dir) not in sys.path:
 
 from utils import get_repo_root
 
-
 TYPE_RE = re.compile(r"^- Type:\s*([A-Z]+)\s*$", re.MULTILINE)
 PROJECT_RE = re.compile(r"^- Project:\s*([a-zA-Z0-9_.\-]+)\s*$", re.MULTILINE)
 TIMESTAMP_RE = re.compile(r"^- Timestamp:\s*([0-9]{4}-[0-9]{2}-[0-9]{2})", re.MULTILINE)

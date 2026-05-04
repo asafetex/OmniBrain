@@ -69,7 +69,7 @@ def try_byterover(config: dict, payload: str) -> tuple[bool, str]:
 
     try:
         proc = subprocess.run(
-            [cmd] + args,
+            [cmd, *args],
             input=payload,
             text=True,
             capture_output=True,

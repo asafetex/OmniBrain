@@ -8,8 +8,6 @@ import shutil
 import subprocess
 import sys
 from pathlib import Path
-from typing import Any
-from unittest.mock import MagicMock
 
 import pytest
 

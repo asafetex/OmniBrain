@@ -5,9 +5,7 @@ from __future__ import annotations
 
 import argparse
 import re
-import sys
 from pathlib import Path
-
 
 CHANGE_ID_RE = re.compile(r"^- Change-ID:\s*(.+)$", re.MULTILINE)
 LEVEL_RE = re.compile(r"^- Level:\s*(L1|L2|L3)$", re.MULTILINE)
@@ -115,7 +113,4 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    if sys.version_info < (3, 10):
-        print("Python 3.10+ required.")
-        raise SystemExit(1)
     raise SystemExit(main())

@@ -4,7 +4,6 @@
 from __future__ import annotations
 
 import argparse
-import json
 import re
 import shutil
 import subprocess
@@ -19,8 +18,6 @@ if str(_tools_dir) not in sys.path:
     sys.path.insert(0, str(_tools_dir))
 
 from config_env import load_config
-from utils import load_json
-
 
 SAFE_ID_RE = re.compile(r"^[A-Za-z0-9._-]+$")
 VERDICT_RE = re.compile(r"^\s*VERDICT\s*:\s*(APPROVE|REJECT)\s*$", re.IGNORECASE | re.MULTILINE)
@@ -108,7 +105,7 @@ def build_prompt(template_path: Path, change_package: str) -> str:
 
 def run_cli(cmd: str, args: list[str], prompt: str, timeout_seconds: int, cwd: Path | None) -> tuple[int, str, str]:
     proc = subprocess.run(
-        [cmd] + args,
+        [cmd, *args],
         input=prompt,
         text=True,
         encoding="utf-8",

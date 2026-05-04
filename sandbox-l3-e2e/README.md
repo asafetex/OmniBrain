@@ -17,7 +17,9 @@ Validar ponta a ponta:
 - Commits principais:
   - `8214d3c` hardening numerico (`NaN`, `inf`, `bool`, overflow)
   - `48aeb69` hardening de `currency` para evitar `TypeError`
-- Testes: `10 passed` em `pytest`
+  - `a7fb7f1` deterministic two-decimal validation
+  - `dc2944e` payment_token format validation
+- Testes: `19 passed` em `pytest`
 
 ## Como rodar localmente (PowerShell)
 
