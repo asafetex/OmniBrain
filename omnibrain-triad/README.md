@@ -5,6 +5,20 @@ MVP executavel para governanca de mudancas com fluxo `diff-first`, consenso mult
 Objetivo operacional:
 Transformar qualquer tarefa em um fluxo diff-first com consenso multiagente, registrando `PLAN/REVIEW/LESSON/WIN` na memoria de execucao e promovendo apenas vitorias executaveis para o Hub curado.
 
+## Documentacao por nivel
+
+Comece pelo mais simples, suba conforme precisa:
+
+| Voce quer... | Leia |
+|---|---|
+| Comecar em 5 min | [../QUICKSTART.md](../QUICKSTART.md) |
+| Tutorial completo (caso real) | [../TUTORIAL.md](../TUTORIAL.md) |
+| Referencia de cada tool | [../TOOLS.md](../TOOLS.md) |
+| Receitas para cenarios reais | [../PLAYBOOKS.md](../PLAYBOOKS.md) |
+| Filosofia e arquitetura | [docs/00_overview.md](docs/00_overview.md) |
+| Setup detalhado | [docs/02_setup.md](docs/02_setup.md) |
+| Especs tecnicas | [docs/](docs/) (13 arquivos) |
+
 ## O que vem pronto
 
 - TRIAD Governance:
