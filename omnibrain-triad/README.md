@@ -120,6 +120,10 @@ Tudo abaixo foi exercitado em smoke tests adversariais e tem evidencia em logs/o
 | Hook audit log | OK | Cada execucao registrada em `.triad-push-audit.log` |
 | Templates Codex por dominio | OK | Auto-detecta auth/billing/data_pipeline e usa checklist especializado (codex) |
 | Templates Gemini por dominio | OK | Mesmo set para Gemini, foco sistemico (contratos, regressoes, SLA) |
+| `confidence_cascade.py` | OK | 3-tier: regras (~0ms) -> heuristicas TF-IDF (~50ms) -> LLM. Simulacao com 200 CPs: 42% short-circuit (LLM economizado) |
+| `suggest_pattern.py` | OK | Cross-domain WIN suggestion via TF-IDF (com filtro `--cross-discipline-only`) |
+| `triad_oracle.py` | OK | Recomendacao baseada em historico: LIKELY_APPROVE / LIKELY_REJECT / MIXED_HISTORY com weighted score |
+| Lifecycle simulation | OK | 7 testes pytest cobrem 60 dias sinteticos: cascata, oraculo, transfer, INBOX hygiene |
 | Race condition | OK | 5 instancias paralelas no mesmo segundo geraram 5 IDs unicos (UUID) |
 | ByteRover CLI ativo | OK (mock) | Caminho positivo validado: payload entregue, memory_id retornado |
 | PreGate (DeepSeek+CodeRabbit) | OK (mock) | L2 com TODO -> REJECT propagado; L3 com 4 auditores -> APPROVE |

@@ -25,6 +25,8 @@ triad-flow = "tools.start_task_flow:main"
 triad-stats = "tools.triad_stats:main"
 triad-search = "tools.search_memory:main"
 triad-curate = "tools.inbox_curator:main"
+triad-suggest = "tools.suggest_pattern:main"
+triad-oracle = "tools.triad_oracle:main"
 
 [build-system]
 requires = ["hatchling"]
