@@ -6,13 +6,15 @@ Politica operacional para a pasta `OmniBrain-remote/` no workspace pai.
 
 ## Status
 
-**Vestigial.** Pode ser deletada com seguranca.
+**DELETADA em 2026-05-05.** Esta doc fica como politica historica e regra anti-recriacao.
 
-A pasta existiu durante a fase de validacao para servir como "espelho de deploy". Hoje e:
-- Gitignored (`.gitignore` linha: `OmniBrain-remote/`)
-- Nao versionada no GitHub
-- Nao gerada automaticamente por nenhum tool
-- Pode estar desatualizada em relacao a `omnibrain-triad/` (canonico)
+A pasta existiu durante a fase de validacao para servir como "espelho de deploy". Foi removida porque:
+- Era gitignored (nao versionada)
+- Nao havia tool gerando automaticamente
+- Estava divergente do `omnibrain-triad/` (canonico)
+- Confundia: dois lugares pra editar o mesmo codigo
+
+**Regra futura:** se alguem (incluindo voce) tiver impulso de recriar `OmniBrain-remote/` ou similar, **leia esta doc primeiro**. As respostas estao na secao "Checklist para futuras decisoes".
 
 ---
 
@@ -108,6 +110,9 @@ Apos sync (2026-05):
 Apos esta politica (2026-05):
   omnibrain-triad/             (canonico, unica fonte)
   OmniBrain-remote/            (vestigial, pode ser deletada)
+
+Apos delecao (2026-05-05):
+  omnibrain-triad/             (canonico, unica fonte) ✓
 ```
 
 ---

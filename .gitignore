@@ -31,7 +31,6 @@ Thumbs.db
 
 # OmniBrain TRIAD - runtime config (personal paths, secrets)
 omnibrain-triad/tools/config.json
-OmniBrain-remote/omnibrain-triad/tools/config.json
 
 # ByteRover local context
 .brv/
@@ -46,9 +45,6 @@ omnibrain-triad/.brv/
 # Runtime artifacts
 omnibrain-triad/tmp/
 sandbox-l3-e2e/tmp/
-
-# OmniBrain-remote (deploy copy, not canonical source)
-OmniBrain-remote/
 
 # Nested git repos / backups
 sandbox-l3-e2e/.git-backup/
