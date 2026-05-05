@@ -20,6 +20,7 @@ FILES = [
     "docs/08_promotion_spec.md",
     "docs/09_mcp_optional.md",
     "docs/10_faq.md",
+    "docs/12_remote_policy.md",
     "docs/migration_byterover_cli_2.md",
     "configs/routing.json",
     "configs/routing.yaml",

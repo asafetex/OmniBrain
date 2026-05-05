@@ -1,12 +1,50 @@
 # 02 Setup
 
-## Pre-requisitos
+## Operating modes (suportados oficialmente)
+
+TRIAD opera em 3 modos. **Todos sao de primeira classe**, escolha pela complexidade aceitavel:
+
+| Modo | Dependencias adicionais | Quando usar |
+|---|---|---|
+| **Pure local** | Apenas `git` + `python 3.10+` | Padrao recomendado pra comecar. Zero CLIs, fallback file-based em tudo. |
+| **Manual fallback** | Pure local + acesso a um LLM web (Claude.ai, ChatGPT, Gemini) | Voce cola prompt em `tmp/manual-prompts/` no LLM web e salva resposta em `tmp/manual-responses/`. |
+| **CLI automatico** | Pure local + Codex CLI + Gemini CLI (opcionalmente DeepSeek/CodeRabbit/ByteRover) | Producao automatizada. Auditores rodam paralelo, sem copy/paste. |
+
+### Hierarquia de fallback (por design)
+
+Cada componente externo tem fallback file-based **automatico**:
+
+```
+Codex CLI offline       -> tmp/manual-prompts/<CHG>/codex_prompt.md (cola num LLM)
+Gemini CLI offline      -> tmp/manual-prompts/<CHG>/gemini_prompt.md
+DeepSeek/CodeRabbit     -> opcionais, ja default disabled
+ByteRover CLI offline   -> context-hub/05_INBOX/byterover-imports/MEM__*.md
+```
+
+**Implicacao:** voce nao precisa instalar nada alem de git+python pra rodar o TRIAD ponta a ponta. **CLIs sao otimizacao, nao requisito.**
+
+### Apenas 2 dependencias sao obrigatorias
+
+| Componente | Por que e obrigatorio |
+|---|---|
+| `git` | TRIAD usa `git diff` como fonte primaria de mudanca |
+| `python 3.10+` | Codigo dos tools e stdlib only, mas Python precisa rodar |
+
+Tudo o mais (Codex, Gemini, ByteRover, Obsidian, hooks) e **opcional com fallback definido**.
+
+---
+
+## Pre-requisitos (modo pure local)
 
 - Sistema: Windows, Linux ou macOS
 - `git` no PATH
 - `python` 3.10+ no PATH
-- Obsidian instalado
-- Claude Code no VS Code
+
+## Pre-requisitos (modo CLI automatico — opcional)
+
+- Tudo do modo pure local, mais:
+- Obsidian instalado (so se for usar Skill Graph visualmente)
+- Claude Code no VS Code (so se quiser usar como executor)
 - Codex CLI logado
 - Gemini CLI logado
 - ByteRover CLI 2.x opcional
