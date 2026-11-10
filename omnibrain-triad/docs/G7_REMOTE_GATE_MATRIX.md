@@ -12,7 +12,7 @@
 | Sistema | Recibo remoto | Estado correto | Dependência |
 |---|---|---|---|
 | HackerSkill | [PR #10](https://github.com/asafetex/HackerSkill_OS/pull/10), [CI PASS](https://github.com/asafetex/HackerSkill_OS/actions/runs/42837925135) | Ready for review; 50 invariantes otimizados, histórico Wave 3/5 preservado | Revisão/merge humano, ontologia e ciência mantidas em HOLD |
-| OmniBrain | [PR #1](https://github.com/asafetex/OmniBrain/pull/1), [CI PASS](https://github.com/asafetex/OmniBrain/actions/runs/42862492279) | Ready for review; workflow corrigido | Revisão e merge antes da PR G7 |
+| OmniBrain | [PR #1 MERGED](https://github.com/asafetex/OmniBrain/pull/1), [main CI PASS](https://github.com/asafetex/OmniBrain/actions/runs/42893758464) | Workflow corrigido e integrado à main no commit bfd61f82cb9811601c0707c79d8ff291c2431a95 | Reavaliar PR #3 contra main atual e executar CI pós-merge |
 | OmniBrain Sentinel/Jev | [PR #3](https://github.com/asafetex/OmniBrain/pull/3), [CI](https://github.com/asafetex/OmniBrain/actions) | Draft, stacked na #1; read-only/no API Jev | Revisão de segurança, merge ordenado, benchmark REAL futuro |
 | Data Skill Compass | [PR #1](https://github.com/asafetex/data-skill-compass/pull/1), [CI scoped PASS](https://github.com/asafetex/data-skill-compass/actions/runs/42863764369), [issue #2](https://github.com/asafetex/data-skill-compass/issues/2) | Draft; ranking determinístico; lint global historicamente falha | GameContext.computeReadiness e unlock_rules, RLS/Postgres e lint completo |
 | The Machine | [integration CI PASS](https://github.com/asafetex/machine-sandbox/actions/runs/42740253285); [PR #71 superseded](https://github.com/asafetex/machine-sandbox/pull/71) | Dois erros do G2 reparados por commit próprio, sem merge automático à master | Segurança operacional, testes de deploy e promoção controlada |
@@ -24,8 +24,8 @@
 | Repos sem HEAD | cognitive-path-engine, Automation | Remoto vazio | Não inferir que trabalho local inexiste |
 
 ## Sequência controlada
-1. Manter branch `main/master` inalterada até revisar as PRs técnicas e obter signoff explícito.
-2. OmniBrain #1 primeiro, depois #3; revisar novamente o diff G7 e CI após #1.
+1. OmniBrain PR #1 integrada após CI e revisão da alteração apenas de caminhos de CI; outras branches `main/master` permanecem protegidas por seus gates.
+2. OmniBrain #1 concluída; PR #3 contém somente additions de G7 contra a nova main e requer CI pós-merge para encerrar o gate técnico.
 3. HackerSkill #10 somente após revisar hashes históricos/Wave gates e aprovação do mantenedor.
 4. Separar Data Skill Compass scoped CI vs lint full e score legado, sem afirmar paridade universal.
 5. E2E BookOS -> ResearchOS -> HackerSkill: checkouts read-only em SHAs fixados, verificar worktree+blob e consumir em SQLite descartável. Testes estruturais e SHA remotos NÃO equivalem a esse E2E.
