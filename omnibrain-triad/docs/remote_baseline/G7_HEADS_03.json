@@ -1,0 +1,67 @@
+{
+  "snapshot": "2026-11-10",
+  "batch": "03",
+  "source": "GitHub connected, remote default branch HEAD only",
+  "rows": [
+    {
+      "repository": "asafetex/churn-predictor-dashboard",
+      "default_branch": "main",
+      "head_sha": "b4dcfb3fadcd0ffb8ff10b57b5d38308a9146e4c",
+      "status": "PINNED"
+    },
+    {
+      "repository": "asafetex/E-Commerce-Application-CI-CD-Pipeline",
+      "default_branch": "main",
+      "head_sha": "14430cb7f63a762d63f1f9da986dde585b1b6054",
+      "status": "PINNED"
+    },
+    {
+      "repository": "asafetex/Automation",
+      "default_branch": "main",
+      "head_sha": null,
+      "status": "EMPTY_REMOTE"
+    },
+    {
+      "repository": "asafetex/data-skill-compass",
+      "default_branch": "main",
+      "head_sha": "7f400c5f0d3c5fc951765ab21b3e615f56145c7c",
+      "status": "PINNED"
+    },
+    {
+      "repository": "asafetex/bolt.new-any-llm",
+      "default_branch": "main",
+      "head_sha": "f8987bec5550d8f7e175c6744af3b5c13d5f92d7",
+      "status": "PINNED"
+    },
+    {
+      "repository": "asafetex/viral-engine",
+      "default_branch": "master",
+      "head_sha": "dec76a310e31684e43651763be44da50df9f205e",
+      "status": "PINNED"
+    },
+    {
+      "repository": "asafetex/Polyglot-System",
+      "default_branch": "main",
+      "head_sha": "7b2f5ed732f16b3c9f47aea189a309cc9c4d5e40",
+      "status": "PINNED"
+    },
+    {
+      "repository": "asafetex/agent-zero-agent-mgmt",
+      "default_branch": "main",
+      "head_sha": "80270a2d56e88685afeb99013958f5c9b831abac",
+      "status": "PINNED"
+    },
+    {
+      "repository": "asafetex/revenue-architecture-insights",
+      "default_branch": "main",
+      "head_sha": "ae5006d4db75d41e797e73858c15f25aef44ee4f",
+      "status": "PINNED"
+    },
+    {
+      "repository": "asafetex/news-extraction-bot",
+      "default_branch": "main",
+      "head_sha": "d43005818c0b80944c709133103f74e4ea967048",
+      "status": "PINNED"
+    }
+  ]
+}
