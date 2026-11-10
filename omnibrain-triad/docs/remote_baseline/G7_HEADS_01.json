@@ -1,0 +1,67 @@
+{
+  "snapshot": "2026-11-10",
+  "batch": "01",
+  "source": "GitHub connected, remote default branch HEAD only",
+  "rows": [
+    {
+      "repository": "asafetex/lead-intelligence-pipeline",
+      "default_branch": "main",
+      "head_sha": "1c1d55fb0cea8df35a8f7c716c61c7b8d2308e04",
+      "status": "PINNED"
+    },
+    {
+      "repository": "asafetex/multi-armed-bandit-api",
+      "default_branch": "main",
+      "head_sha": "4428f90ce7d8a6e0b44bf268544d57fa5688a874",
+      "status": "PINNED"
+    },
+    {
+      "repository": "asafetex/Adala",
+      "default_branch": "master",
+      "head_sha": "7c7161f9ce2b14a5bd92ec25d20b59164e3a6a67",
+      "status": "PINNED"
+    },
+    {
+      "repository": "asafetex/data-engineer-handbook",
+      "default_branch": "main",
+      "head_sha": "60ac6646a45789ae29199050145162f208ed0af3",
+      "status": "PINNED"
+    },
+    {
+      "repository": "asafetex/500-AI-Agents-Projects",
+      "default_branch": "main",
+      "head_sha": "6a5769e9f3cc61dbd525e2419a1b779911bf8a97",
+      "status": "PINNED"
+    },
+    {
+      "repository": "asafetex/HackerSkill_OS",
+      "default_branch": "main",
+      "head_sha": "629e845542a5ad95f2addf9957163e44d6684874",
+      "status": "PINNED"
+    },
+    {
+      "repository": "asafetex/OmniViral",
+      "default_branch": "feat/studio-fase3-e-motor-emocao",
+      "head_sha": "97e04b835c146c4f68d61a929d103d8275a45df1",
+      "status": "PINNED"
+    },
+    {
+      "repository": "asafetex/claude-system-backup",
+      "default_branch": "main",
+      "head_sha": "a311a2edd4275609203715408e3d4897efd8eaff",
+      "status": "PINNED"
+    },
+    {
+      "repository": "asafetex/n8n-workflows",
+      "default_branch": "main",
+      "head_sha": "578cbef8c5a7887f7b8026b25e77fb1553208842",
+      "status": "PINNED"
+    },
+    {
+      "repository": "asafetex/jarvis_os",
+      "default_branch": "main",
+      "head_sha": "a2c32820947fcb6dfc70398ae070d354a93800f2",
+      "status": "PINNED"
+    }
+  ]
+}
