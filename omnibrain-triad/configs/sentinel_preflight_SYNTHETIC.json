@@ -1,0 +1,37 @@
+{
+  "schema_version": "sentinel.preflight.v0.1",
+  "checks": [
+    {
+      "gate_id": "GIT_REMOTE",
+      "status": "PASS_REPORTED",
+      "evidence": {
+        "url": "https://github.com/asafetex/OmniBrain/actions/runs/42862492279",
+        "head_sha": "a42c93e8846367171413092f57281b5e10f08153"
+      }
+    },
+    {
+      "gate_id": "LOCAL_RECONCILIATION",
+      "status": "NOT_CHECKED"
+    },
+    {
+      "gate_id": "CANON_AUTHORITY",
+      "status": "HOLD"
+    },
+    {
+      "gate_id": "CROSS_SYSTEM_E2E",
+      "status": "NOT_CHECKED"
+    },
+    {
+      "gate_id": "HUMAN_SCIENTIFIC_REVIEW",
+      "status": "HOLD"
+    },
+    {
+      "gate_id": "RIGHTS_PRIVACY",
+      "status": "HOLD"
+    },
+    {
+      "gate_id": "SECURITY_RELEASE",
+      "status": "HOLD"
+    }
+  ]
+}
